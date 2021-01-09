@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pathfindingVisualiser.MainControl">
-    <children>
-      <Pane prefHeight="200.0" prefWidth="200.0">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="643.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pathfindingVisualiser.MainControl">
+   <children>
+      <Pane prefHeight="86.0" prefWidth="643.0">
          <children>
-              <Label layoutX="53.0" layoutY="41.0" text="Hello world FXML" />
+            <ChoiceBox fx:id="algChoiceBox" layoutX="14.0" layoutY="30.0" prefHeight="25.0" prefWidth="111.0" />
+            <ChoiceBox fx:id="mazeChoiceBox" layoutX="137.0" layoutY="30.0" prefHeight="25.0" prefWidth="111.0" />
+            <Button layoutX="568.0" layoutY="19.0" mnemonicParsing="false" onAction="#step" prefHeight="47.0" prefWidth="52.0" text="Button" />
          </children>
       </Pane>
-    </children>
-</HBox>
+      <StackPane prefHeight="347.0" prefWidth="643.0">
+         <children>
+            <Canvas fx:id="boardCanvas" height="343.0" width="641.0" />
+         </children>
+      </StackPane>
+   </children>
+</VBox>
