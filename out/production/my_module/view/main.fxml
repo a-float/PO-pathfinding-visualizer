@@ -4,18 +4,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="643.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pathfindingVisualiser.MainControl">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pathfindingVisualiser.MainControl">
    <children>
-      <Pane prefHeight="86.0" prefWidth="643.0">
+      <Pane prefHeight="70.0" prefWidth="700.0">
          <children>
-            <ChoiceBox fx:id="algChoiceBox" layoutX="14.0" layoutY="30.0" prefHeight="25.0" prefWidth="111.0" />
-            <ChoiceBox fx:id="mazeChoiceBox" layoutX="137.0" layoutY="30.0" prefHeight="25.0" prefWidth="111.0" />
-            <Button layoutX="568.0" layoutY="19.0" mnemonicParsing="false" onAction="#step" prefHeight="47.0" prefWidth="52.0" text="Button" />
+            <ChoiceBox fx:id="algChoiceBox" layoutX="509.0" layoutY="13.0" prefHeight="25.0" prefWidth="111.0" />
+            <ChoiceBox fx:id="mazeChoiceBox" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="111.0" />
+            <Button layoutX="632.0" layoutY="13.0" mnemonicParsing="false" onAction="#playPause" prefHeight="25.0" prefWidth="56.0" text="&gt;||" />
+            <Button layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#startMazeGeneration" prefHeight="25.0" prefWidth="111.0" text="Generate maze" />
+            <Button layoutX="132.0" layoutY="14.0" mnemonicParsing="false" onAction="#resetBoard" text="Clear board" />
+            <Button layoutX="132.0" layoutY="42.0" mnemonicParsing="false" onAction="#clearPath" prefHeight="25.0" prefWidth="78.0" text="Clear path" />
+            <Button layoutX="509.0" layoutY="41.0" mnemonicParsing="false" onAction="#startPathfinding" prefHeight="25.0" prefWidth="111.0" text="Start pathfinder" />
+            <Button layoutX="632.0" layoutY="41.0" mnemonicParsing="false" onAction="#performOneStep" prefHeight="25.0" prefWidth="56.0" text="step" />
          </children>
       </Pane>
-      <StackPane prefHeight="347.0" prefWidth="643.0">
+      <StackPane prefHeight="400.0" prefWidth="700.0">
          <children>
-            <Canvas fx:id="boardCanvas" height="343.0" width="641.0" />
+            <Canvas fx:id="boardCanvas" height="400.0" width="700.0" />
          </children>
       </StackPane>
    </children>

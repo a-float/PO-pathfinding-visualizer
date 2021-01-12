@@ -1,6 +1,7 @@
 package pathfindingVisualiser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //TODO make it a singleton?
@@ -8,8 +9,10 @@ public class Board {
     private int width;
     private int height;
     private final Node[][] nodes;
-    private final Vector2 startNodePos;
-    private final Vector2 endNodePos;
+    private Vector2 startNodePos;
+    private Vector2 endNodePos;
+    private static final List<NodeState> visitableNodeStates = Arrays.asList(NodeState.FREE, NodeState.BUSY, NodeState.END);
+    private static final List<NodeState> pathNodeStates = Arrays.asList(NodeState.VISITED, NodeState.BUSY, NodeState.PATH);
 
     public Node getNodeAt(Vector2 pos){
         return nodes[pos.getY()][pos.getX()];
@@ -28,23 +31,45 @@ public class Board {
                 nodes[y][x].setBoard(this);
             }
         }
+        setUpStartAndEnd();
+        //TODO add a method setStartNode, setEndNode
+    }
+    private void setUpStartAndEnd(){    //TODO choose positions
         startNodePos = new Vector2(0, 0);
         endNodePos = new Vector2(width-1, height-1);
         getStartNode().setState(NodeState.START);
         getEndNode().setState(NodeState.END);
-        //TODO add a method setStartNode, setEndNode
     }
-    public void clearAfterPathfinder(){
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < height; y++){
+
+    public void clearPath(){
+        for(int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 Node node = nodes[y][x];
-                if(node.getState() == NodeState.BUSY || node.getState() == NodeState.VISITED){
-                    node.setState(NodeState.FREE);
+                if (pathNodeStates.contains(node.getState())) {
+                    node.reset();
                 }
-                node.setDistance(Double.POSITIVE_INFINITY);
             }
         }
+        resetStartAndEnd();
     }
+    private void resetStartAndEnd(){
+        getStartNode().reset();
+        getStartNode().setState(NodeState.START);
+        getEndNode().reset();
+        getEndNode().setState(NodeState.END);
+    }
+    public void resetBoard() {  //not using clear Path to not make it 2*n^2
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                Node node = nodes[y][x];
+                if(pathNodeStates.contains(node.getState()) || node.getState() == NodeState.WALL){
+                    node.reset();
+                }
+            }
+        }
+        resetStartAndEnd();
+    }
+
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();
@@ -66,13 +91,14 @@ public class Board {
     public Node getEndNode(){
         return getNodeAt(endNodePos);
     }
+
     public List<Node> getNodeNeighbours(Vector2 position) {
         List<Node> result = new ArrayList<Node>(4);
         for (Vector2 pos : position.getAdjacentPositions()) {
             if (pos.getX() >= 0 && pos.getX() < width
                     && pos.getY() >= 0 && pos.getY() < height) {
                 Node neigh = getNodeAt(pos);
-                if (neigh.getState() == NodeState.FREE || neigh.getState() == NodeState.BUSY) { //TODO change the hardcoding
+                if (visitableNodeStates.contains(neigh.getState())) {
                     result.add(neigh);
                 }
             }

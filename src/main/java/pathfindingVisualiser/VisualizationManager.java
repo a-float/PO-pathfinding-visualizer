@@ -16,7 +16,9 @@ public class VisualizationManager {
 
     private VisualizationManager(){
         mazeGenerators.put("Random Maze", new RandomMazeGenerator());
+        mazeGenerators.put("Recursive Maze", new RecursiveMazeGenerator());
         pathfinders.put("Dijkstra's algorithm", new DijkstraAlgorithm());
+        pathfinders.put("A* algorithm", new AstarAlgorithm());
     }
 
     public static VisualizationManager getInstance() {
@@ -40,14 +42,35 @@ public class VisualizationManager {
         return new ArrayList<>(pathfinders.keySet());
     }
 
-    public void init(String algToPerform) {
-        currentEditor = pathfinders.get(algToPerform);
+    public void init(String editorToStartName) {
+        if(pathfinders.containsKey(editorToStartName)){
+            currentEditor = pathfinders.get(editorToStartName);
+        }
+        else{
+            currentEditor = mazeGenerators.get(editorToStartName);
+        }
         currentEditor.start(board);
-        System.out.println("starting "+algToPerform);
+        System.out.println("starting "+editorToStartName);
         isPerforming = true;
     }
+    public void resetBoard(){
+        if(!isPerforming) {
+            board.resetBoard();
+        }
+    }
+    public void clearPath(){
+        if(!isPerforming) {
+            board.clearPath();
+        }
+    }
+
     public void step(){
         if(!currentEditor.isDone()){currentEditor.step();}
         else isPerforming = false;
+    }
+
+    public double getCellSize(Vector2 size){
+        System.out.println(size+" from getCellSize");
+        return Math.min(size.getX()/board.getWidth(), size.getY()/board.getHeight());
     }
 }

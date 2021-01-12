@@ -22,7 +22,6 @@ public class Node implements Comparable<Node>{
         return this.board.getNodeNeighbours(this.position);
     }
 
-    //TODO below looks kind of bad, do i change it or no? remember to ask
     public void setBoard(Board board){
         this.board = board;
     }
@@ -70,4 +69,13 @@ public class Node implements Comparable<Node>{
         this.position = position;
     }
 
+    public boolean isStartOrEnd() {
+        return this.state == NodeState.END || this.state == NodeState.START;
+    }
+
+    public void reset() {
+        this.state = NodeState.FREE;
+        this.distance = Double.POSITIVE_INFINITY;
+        this.parent = null;
+    }
 }

@@ -9,7 +9,7 @@ public class RandomMazeGenerator implements BoardEditor{
     @Override
     public void start(Board board) {    //TODO add wallFactor back?
         this.board = board;
-        wallsToPut = (int) Math.round(board.getNodeCount() * 0.33) - 1;
+        wallsToPut = (int) Math.round(board.getNodeCount() * 0.26) - 1;
         System.out.println(wallsToPut);
     }
 
@@ -22,7 +22,6 @@ public class RandomMazeGenerator implements BoardEditor{
             }
             node.setState(NodeState.WALL);
             wallsToPut--;
-            System.out.println(wallsToPut);
         }
     }
 

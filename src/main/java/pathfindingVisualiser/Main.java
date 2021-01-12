@@ -24,6 +24,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
         Parent root = loader.load();
+        primaryStage.setTitle("Pathfinding Visualizer");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
