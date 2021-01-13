@@ -49,12 +49,15 @@ public class MainControl implements Initializable {
         else timer.play();
         isPlaying = !isPlaying;
     }
+
     @FXML
     private void step(ActionEvent event){
         //the animation is not paused and there is an active board editor
         if(isPlaying) {
             if(manager.isPerforming) {
-                manager.step();
+                for(int i = 0; i < manager.stepsPerFrame; i++) {
+                    manager.step();
+                }
                 showBoard();
             }
             else{
@@ -73,7 +76,7 @@ public class MainControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Board board = new Board(21,12);
+        Board board = new Board(63,36); //canvas is 7:4
         manager = VisualizationManager.getInstance();
         manager.setBoard(board);
 

@@ -14,11 +14,11 @@ public class RecursiveMazeGenerator implements BoardEditor{
      * @return true if passage
      */
     private boolean isPassage(Vector2 pos){
-        if(pos.getX() < 0 || pos.getX() >= board.getWidth() ||
-                pos.getY() < 0 || pos.getY() >= board.getHeight()) {
-            return false;   //there is no wall there, so its a passage
+        if(!board.isInRange(pos)){
+            return false;   //out of bounds -> no passage
         }
         else{
+            //there should be a wall, but there isn't so it must be a purposefully left passage
             return !wallsToBulid.contains((pos));
         }
     }
@@ -31,13 +31,17 @@ public class RecursiveMazeGenerator implements BoardEditor{
      * @return true if the wall can be build
      */
     private boolean canBulidWall(Vector2 wallStart, Vector2 diff, int wallLength) {
+//        System.out.println("Can this wall be bulid?");
+//        System.out.println("start, diff, length "+wallStart+" "+ diff+" "+ wallLength);
         Vector2 posBeforeWall = Vector2.subtract(wallStart, diff);
-        Vector2 posAfterWall = new Vector2(wallStart.getX() + (wallLength+1) * diff.getX(),
-                                           wallStart.getY() + (wallLength+1) * diff.getY());
+        Vector2 posAfterWall = new Vector2(wallStart.getX() + wallLength * diff.getX(),
+                                           wallStart.getY() + wallLength * diff.getY());
+//        System.out.println("pos before and after "+posBeforeWall + " " + posAfterWall);
+//        System.out.println("isPassage before and after "+isPassage(posBeforeWall) + " "+ isPassage(posAfterWall));
         return !isPassage(posBeforeWall) && !isPassage(posAfterWall);
     }
 
-    /**
+    /**     //TODO the random should be seeded
      * Adds positions of soon to be walls to wallToBulid queue
      * @param wallStart position to start buliding a wall form
      * @param diff  buliding direction
@@ -53,61 +57,59 @@ public class RecursiveMazeGenerator implements BoardEditor{
             currPos.add(diff);
         }
     }
-    private void divideAreaHorizontally(Vector2 topLeft, Vector2 bottomRight){
-        System.out.println("horizotnal "+topLeft+" "+ bottomRight);
+    private void divideArea(Vector2 topLeft, Vector2 bottomRight, boolean isVertical){
+//        System.out.println("top left, bottom right, isVertical "+isVertical+" "+topLeft+" "+bottomRight);
         int width = bottomRight.getX() - topLeft.getX()+1;
         int height = bottomRight.getY() - topLeft.getY()+1;
-        boolean canWall = true;
-        if(height >= 3){ //creating vertical wall
-            int wallRow = random.nextInt(height-2)+1; //no wall at the edge of the area
-            Vector2 wallStart = Vector2.add(topLeft, new Vector2(0,wallRow));
+        int perpendicularSize, parallelSize;
+        Vector2 dir;
+        if(isVertical) {
+            perpendicularSize = width;
+            parallelSize = height;
+            dir = Vector2.up();
+        }
+        else{   //horizontal
+            perpendicularSize = height;
+            parallelSize = width;
+            dir = Vector2.right();
+        }
 
-            if(canBulidWall(wallStart, Vector2.right(), width)) {
-                System.out.println("can bulid");
-                bulidWall(wallStart, Vector2.right(), width);
+        boolean failedToBulidTheWall = false;   //tried to build a wall but failed because of the passage
 
-                Vector2 newBottomRight1 = Vector2.add(topLeft, new Vector2(width-1, wallRow-1));
-                Vector2 newTopLeft2 = Vector2.add(topLeft, new Vector2(0, wallRow+1));
+        if(perpendicularSize >= 3 && parallelSize > 1){ //enough space to create a wall
+            int wallPosIndex = random.nextInt(perpendicularSize-2)+1; //no wall at the edge of the area
+            Vector2 wallStartPos = new Vector2(topLeft.getX() + dir.getY() * wallPosIndex,
+                                               topLeft.getY() + dir.getX() * wallPosIndex);
 
-                divideAreaVertically(topLeft, newBottomRight1);
-                divideAreaVertically(newTopLeft2, bottomRight);
-                return;
+            if(canBulidWall(wallStartPos, dir, parallelSize)) {
+//                System.out.println("can bulid");
+                bulidWall(wallStartPos, dir, parallelSize);
+
+                Vector2 newTopLeft1, newBottomRight1, newTopLeft2, newBottomRight2;
+
+                if(isVertical) {        //TODO comrpess lines below
+                    newBottomRight1 = Vector2.add(topLeft, new Vector2(wallPosIndex - 1, height - 1));
+                    newTopLeft2 = Vector2.add(topLeft, new Vector2(wallPosIndex + 1, 0));
+                }
+                else {
+                    newBottomRight1 = Vector2.add(topLeft, new Vector2(width - 1, wallPosIndex - 1));
+                    newTopLeft2 = Vector2.add(topLeft, new Vector2(0, wallPosIndex + 1));
+                }
+                divideArea(topLeft, newBottomRight1, !isVertical);
+                divideArea(newTopLeft2, bottomRight, !isVertical);
             }
-            else{
-                canWall = false;
+            else if(perpendicularSize > 4){    //can't build wall because of a passage
+                //an area of perpendicular size of 3 or 4 can have all possible walls blocked by passages
+                //just leave it
+                //else try again to get a wall not on a passage
+                divideArea(topLeft, bottomRight, isVertical);
+            }
+            else if(parallelSize > 4){ //avoid deadly 4x4 squares with walls full of passages
+                    divideArea(topLeft, bottomRight, !isVertical);
             }
         }
-        if(width >= 3 || !canWall){ //cant divide horizontally, but can vertically
-            divideAreaVertically(topLeft, bottomRight);
-        }
-    }
-
-    private void divideAreaVertically(Vector2 topLeft, Vector2 bottomRight){
-        System.out.println("vertical "+topLeft+" "+ bottomRight);
-        int width = bottomRight.getX() - topLeft.getX()+1;
-        int height = bottomRight.getY() - topLeft.getY()+1;
-        boolean canWall = true;
-
-        if(width >= 3){ //creating vertical wall
-            int wallColumn = random.nextInt(width-2)+1; //no wall at the edge of the area
-            Vector2 wallStart = Vector2.add(topLeft, new Vector2(wallColumn,0));
-
-            if(canBulidWall(wallStart, Vector2.up(), height)) {
-                bulidWall(Vector2.add(topLeft, new Vector2(wallColumn, 0)), Vector2.up(), height);
-
-                Vector2 newBottomRight1 = Vector2.add(topLeft, new Vector2(wallColumn - 1, height - 1));
-                Vector2 newTopLeft2 = Vector2.add(topLeft, new Vector2(wallColumn + 1, 0));
-
-                divideAreaHorizontally(topLeft, newBottomRight1);
-                divideAreaHorizontally(newTopLeft2, bottomRight);
-                return;
-            }
-            else{
-                canWall = false;
-            }
-        }
-        if(height >= 3 || !canWall){ //cant divide horizontally, but can vertically
-            divideAreaHorizontally(topLeft, bottomRight);
+        else if(parallelSize >= 3 && perpendicularSize > 1){ //cant this way because of the passage, but maybe the other one can
+            divideArea(topLeft, bottomRight, !isVertical);
         }
     }
 
@@ -116,19 +118,19 @@ public class RecursiveMazeGenerator implements BoardEditor{
         this.board = board;
         done = false;
         wallsToBulid.clear();
-        divideAreaHorizontally(Vector2.zero(), new Vector2(board.getWidth()-1, board.getHeight()-1));
-        System.out.println(wallsToBulid);
+        divideArea(Vector2.zero(), new Vector2(board.getWidth()-1, board.getHeight()-1), true);
+//        System.out.println(wallsToBulid);
     }
 
     @Override
     public void step() {
         if(!wallsToBulid.isEmpty()){
             Vector2 pos = wallsToBulid.poll();
-            System.out.println(pos);
             Node node = board.getNodeAt(pos);
             node.setState(NodeState.WALL);
         }
         else{
+            System.out.println("Maze gneration complete.");
             done = true;
         }
     }

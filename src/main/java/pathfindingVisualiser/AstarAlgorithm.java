@@ -4,29 +4,43 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-public class AstarAlgorithm implements BoardEditor{
-
-    private boolean isSearching;
-    private boolean isShowingPath;
-    private boolean done;
-    private Node endNode;
-    private Node currPathNode;
+public class AstarAlgorithm extends Pathfinder{
     private final HashMap<Node, Double> nodeValues = new HashMap<>();
+    private Node endNode;
     Comparator<Node> nodeComparator = Comparator
-            .comparing(n -> nodeValues.get(n));
+            .comparing(nodeValues::get);
+
     private final PriorityQueue<Node> queue = new PriorityQueue<>(3, nodeComparator);
 
     @Override
     public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
+        super.start(board);
         queue.clear();
-        Node startNode = board.getStartNode();
+        nodeValues.clear();
         startNode.setDistance(0);
         endNode = board.getEndNode();
-        System.out.println(endNode);
-        done = false;
-        isShowingPath = false;
-        isSearching = true;
         relax(startNode);
+    }
+
+    @Override
+    void search() {
+        Node node = queue.poll(); //returns null when the queue is empty
+        if (node == null){  //the end node has not been found
+            isSearching = false;
+            System.out.print("No path exists.");
+            done = true;
+        }
+        else {
+            if (node.getState() == NodeState.END) {
+                isSearching = false;
+                isShowingPath = true;
+                target = node;
+                System.out.println("The end node has been found. Showing the path!");
+            }
+            else if(node.getState() != NodeState.VISITED){
+                relax(node);
+            }
+        }
     }
 
     /**
@@ -54,45 +68,5 @@ public class AstarAlgorithm implements BoardEditor{
         if(!relaxNode.isStartOrEnd()){
             relaxNode.setState(NodeState.VISITED);
         }
-    }
-
-    @Override
-    public void step(){
-        if(isSearching) {
-            Node node = queue.poll(); //returns null when the queue is empty
-            if (node == null){  //the end node has not been found
-                isSearching = false;
-                System.out.print("No path exists.");
-                done = true;
-            }
-            else {
-                if (node.getState() == NodeState.END) {
-                    isSearching = false;
-                    isShowingPath = true;
-                    currPathNode = endNode;
-                    System.out.println("The end node has been found. Showing the path!");
-                }
-                else if(node.getState() != NodeState.VISITED){
-                    relax(node);
-                }
-            }
-        }
-        else if(isShowingPath){
-            if(currPathNode.getParent() != null){
-                currPathNode = currPathNode.getParent();
-                if(!currPathNode.isStartOrEnd())
-                    currPathNode.setState(NodeState.PATH);
-            }
-            else{
-                System.out.println("End of showing the path.");
-                isShowingPath = false;
-                done = true;
-            }
-        }
-    }
-
-    @Override
-    public boolean isDone() {
-        return done;
     }
 }

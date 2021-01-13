@@ -112,4 +112,8 @@ public class Board {
     public int getHeight() {
         return height;
     }
+    public boolean isInRange(Vector2 pos){
+        return !(pos.getX() < 0 || pos.getX() >= getWidth() ||
+                pos.getY() < 0 || pos.getY() >= getHeight());
+    }
 }

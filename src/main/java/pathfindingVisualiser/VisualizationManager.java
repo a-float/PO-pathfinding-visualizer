@@ -7,6 +7,7 @@ import java.util.List;
 
 //its a singleton class //TODO should it be? Same with BoardEditors
 public class VisualizationManager {
+    public int stepsPerFrame;
     private Board board;        //TODO move it to a separate data class?
     private final static HashMap<String, BoardEditor> mazeGenerators= new HashMap<>();
     private final static HashMap<String, BoardEditor> pathfinders= new HashMap<>();
@@ -19,6 +20,8 @@ public class VisualizationManager {
         mazeGenerators.put("Recursive Maze", new RecursiveMazeGenerator());
         pathfinders.put("Dijkstra's algorithm", new DijkstraAlgorithm());
         pathfinders.put("A* algorithm", new AstarAlgorithm());
+        pathfinders.put("DFS algorithm", new DfsAlgorithm());
+        pathfinders.put("BFS algorithm", new BfsAlgorithm());
     }
 
     public static VisualizationManager getInstance() {
@@ -29,6 +32,7 @@ public class VisualizationManager {
     }
 
     public void setBoard(Board board){
+        this.stepsPerFrame = Math.max(1, board.getNodeCount()/500);
         this.board = board;
     }
 
