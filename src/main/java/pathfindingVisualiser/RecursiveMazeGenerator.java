@@ -6,7 +6,6 @@ public class RecursiveMazeGenerator implements BoardEditor{
     private Board board;
     private boolean done;
     private final Queue<Vector2> wallsToBulid = new LinkedList<>();
-    private static final Random random = new Random();
 
     /**
      * Checks if there is a passage at sepcified psoition
@@ -14,7 +13,7 @@ public class RecursiveMazeGenerator implements BoardEditor{
      * @return true if passage
      */
     private boolean isPassage(Vector2 pos){
-        if(!board.isInRange(pos)){
+        if(!board.isInBounds(pos)){
             return false;   //out of bounds -> no passage
         }
         else{
@@ -48,7 +47,7 @@ public class RecursiveMazeGenerator implements BoardEditor{
      * @param wallLength wall length
      */
     private void bulidWall(Vector2 wallStart, Vector2 diff, int wallLength){
-        int passageIndex = random.nextInt(wallLength);
+        int passageIndex = VisualizationManager.random.nextInt(wallLength);
         Vector2 currPos = wallStart;
         for(int i = 0; i < wallLength; i++){
             if(i != passageIndex){
@@ -77,7 +76,7 @@ public class RecursiveMazeGenerator implements BoardEditor{
         boolean failedToBulidTheWall = false;   //tried to build a wall but failed because of the passage
 
         if(perpendicularSize >= 3 && parallelSize > 1){ //enough space to create a wall
-            int wallPosIndex = random.nextInt(perpendicularSize-2)+1; //no wall at the edge of the area
+            int wallPosIndex = VisualizationManager.random.nextInt(perpendicularSize-2)+1; //no wall at the edge of the area
             Vector2 wallStartPos = new Vector2(topLeft.getX() + dir.getY() * wallPosIndex,
                                                topLeft.getY() + dir.getX() * wallPosIndex);
 
@@ -130,7 +129,7 @@ public class RecursiveMazeGenerator implements BoardEditor{
             node.setState(NodeState.WALL);
         }
         else{
-            System.out.println("Maze gneration complete.");
+            System.out.println("Maze generation complete.");
             done = true;
         }
     }

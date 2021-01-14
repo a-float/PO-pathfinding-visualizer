@@ -5,6 +5,10 @@ import java.util.PriorityQueue;
 public class DijkstraAlgorithm extends Pathfinder{
     private final PriorityQueue<Node> queue = new PriorityQueue<>();
 
+    public DijkstraAlgorithm(){
+        super(true);
+    }
+
     @Override
     public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
         super.start(board);
@@ -39,14 +43,10 @@ public class DijkstraAlgorithm extends Pathfinder{
             if(newDistance < node.getDistance()) {
                 node.setParent(relaxNode);
                 node.setDistance(newDistance);
-                if(!node.isStartOrEnd()) {
-                    node.setState(NodeState.BUSY);
-                }
+                node.trySetState(NodeState.BUSY);
                 queue.add(node);
             }
         }
-        if(!relaxNode.isStartOrEnd()){
-            relaxNode.setState(NodeState.VISITED);
-        }
+        relaxNode.trySetState(NodeState.VISITED);
     }
 }

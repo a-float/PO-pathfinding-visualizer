@@ -1,5 +1,7 @@
 package pathfindingVisualiser;
 
+import javafx.scene.paint.Color;
+
 import java.util.List;
 
 public class Node implements Comparable<Node>{
@@ -73,9 +75,30 @@ public class Node implements Comparable<Node>{
         return this.state == NodeState.END || this.state == NodeState.START;
     }
 
-    public void reset() {
-        this.state = NodeState.FREE;
+    /**
+     * If the node is a start or an end, its state does not change
+     * Sets the node values do defaults values.
+     */
+    public void reset(boolean clearWeights) {
+        trySetState(NodeState.FREE);
         this.distance = Double.POSITIVE_INFINITY;
         this.parent = null;
+        if(clearWeights)this.weight = 1;
+    }
+
+    public void trySetState(NodeState state){
+        if(!isStartOrEnd()){
+            this.state = state;
+        }
+    }
+
+    public Color getColor(){
+        if(state != NodeState.FREE){
+            return NodeState.colorMap.get(state);
+        }
+        else{
+            double interpolate = (double)weight/VisualizationManager.MAX_WEIGHT;
+            return Color.WHITE.interpolate(NodeState.colorMap.get(state),interpolate);
+        }
     }
 }

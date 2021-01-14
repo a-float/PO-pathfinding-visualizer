@@ -11,8 +11,10 @@ public class Board {
     private final Node[][] nodes;
     private Vector2 startNodePos;
     private Vector2 endNodePos;
+    private boolean isWeighted = false;
     private static final List<NodeState> visitableNodeStates = Arrays.asList(NodeState.FREE, NodeState.BUSY, NodeState.END);
-    private static final List<NodeState> pathNodeStates = Arrays.asList(NodeState.VISITED, NodeState.BUSY, NodeState.PATH);
+    private static final List<NodeState> pathNodeStates = Arrays.asList(
+            NodeState.VISITED, NodeState.BUSY, NodeState.PATH, NodeState.END, NodeState.START);
 
     public Node getNodeAt(Vector2 pos){
         return nodes[pos.getY()][pos.getX()];
@@ -46,28 +48,19 @@ public class Board {
             for (int y = 0; y < height; y++) {
                 Node node = nodes[y][x];
                 if (pathNodeStates.contains(node.getState())) {
-                    node.reset();
+                    node.reset(false);
                 }
             }
         }
-        resetStartAndEnd();
     }
-    private void resetStartAndEnd(){
-        getStartNode().reset();
-        getStartNode().setState(NodeState.START);
-        getEndNode().reset();
-        getEndNode().setState(NodeState.END);
-    }
-    public void resetBoard() {  //not using clear Path to not make it 2*n^2
+
+    public void resetBoard(boolean clearWeights) {  //not using clear Path to not make it 2*n^2
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
                 Node node = nodes[y][x];
-                if(pathNodeStates.contains(node.getState()) || node.getState() == NodeState.WALL){
-                    node.reset();
-                }
+                node.reset(clearWeights);
             }
         }
-        resetStartAndEnd();
     }
 
     @Override
@@ -112,8 +105,31 @@ public class Board {
     public int getHeight() {
         return height;
     }
-    public boolean isInRange(Vector2 pos){
+
+    public boolean isInBounds(Vector2 pos){
         return !(pos.getX() < 0 || pos.getX() >= getWidth() ||
                 pos.getY() < 0 || pos.getY() >= getHeight());
+    }
+    public void clearWeights(){
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                getNodeAt(new Vector2(x,y)).setWeight(1);
+            }
+        }
+        isWeighted = false;
+    }
+    public void randomizeWeights(){
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++) {
+                if (VisualizationManager.random.nextInt(100) > VisualizationManager.WEIGHT_CHANGE) {
+                    int newWeight = VisualizationManager.random.nextInt(VisualizationManager.MAX_WEIGHT);
+                    getNodeAt(new Vector2(x, y)).setWeight(newWeight);
+                }
+            }
+        }
+        isWeighted = true;
+    }
+    public boolean getIsWeighted(){
+        return isWeighted;
     }
 }

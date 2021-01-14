@@ -1,5 +1,9 @@
 package pathfindingVisualiser;
 
+import javafx.scene.paint.Color;
+
+import java.util.Map;
+
 //TODO possibly remove the isWallable thing
 public enum NodeState {
     WALL, FREE, VISITED, BUSY, START, END, PATH;  //TODO change BUSY to something more descriptive?
@@ -16,7 +20,16 @@ public enum NodeState {
             case PATH -> "PATH";
         };
     }
-//    public boolean isWallable(){
-//        if(this == )
-//    }
+
+    static final Map<NodeState, Color> colorMap;
+    static {
+        colorMap = Map.of(
+                NodeState.FREE, Color.HOTPINK,
+                NodeState.START, Color.GREEN,
+                NodeState.END, Color.ORANGERED,
+                NodeState.WALL, Color.BLACK,
+                NodeState.VISITED, Color.DARKBLUE,
+                NodeState.BUSY, Color.CYAN,
+                NodeState.PATH, Color.YELLOW);
+    }
 }

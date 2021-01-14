@@ -7,11 +7,15 @@ public abstract class Pathfinder implements BoardEditor {
     protected Node target;
     protected Board board;
     protected Node startNode;
+    public boolean canSolveWeighted;
 
-    @Override
+    public Pathfinder(boolean canSolveWeighted){
+        this.canSolveWeighted = canSolveWeighted;
+    }
+
     public void start(Board board) {
-        startNode = board.getStartNode();
         this.board = board;
+        startNode = board.getStartNode();
         isSearching = true;
         isShowingPath = false;
         done = false;
@@ -26,9 +30,7 @@ public abstract class Pathfinder implements BoardEditor {
         else if(isShowingPath){
             if(target.getParent() != null){
                 target = target.getParent();
-                if(!target.isStartOrEnd()) {
-                    target.setState(NodeState.PATH);
-                }
+                target.trySetState(NodeState.PATH);
             }
             else{
                 finishShowingPath();

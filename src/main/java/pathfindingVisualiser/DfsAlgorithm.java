@@ -5,6 +5,10 @@ import java.util.Stack;
 public class DfsAlgorithm extends Pathfinder{
     private final Stack<Node> stack = new Stack<>();
 
+    public DfsAlgorithm(){
+        super(false);
+    }
+
     @Override
     public void start(Board board) {
         stack.clear();
@@ -13,15 +17,11 @@ public class DfsAlgorithm extends Pathfinder{
     }
 
     private void visit(Node node){
-        if(!node.isStartOrEnd()) {
-            node.setState(NodeState.VISITED);
-        }
+        node.trySetState(NodeState.VISITED);
         for(Node n: node.getNeighbours()){
             if(n.getState() != NodeState.BUSY && n.getState() != NodeState.VISITED){
                 n.setParent(node);
-                if(!n.isStartOrEnd()) {
-                    n.setState(NodeState.BUSY);
-                }
+                n.trySetState(NodeState.BUSY);
                 stack.push(n);
             }
         }

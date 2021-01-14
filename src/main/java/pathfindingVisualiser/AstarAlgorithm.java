@@ -12,6 +12,10 @@ public class AstarAlgorithm extends Pathfinder{
 
     private final PriorityQueue<Node> queue = new PriorityQueue<>(3, nodeComparator);
 
+    public AstarAlgorithm(){
+        super(true);
+    }
+
     @Override
     public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
         super.start(board);
@@ -58,15 +62,11 @@ public class AstarAlgorithm extends Pathfinder{
             if(newDistance < node.getDistance()) {
                 node.setParent(relaxNode);
                 node.setDistance(newDistance);
-                if(!node.isStartOrEnd()) {
-                    node.setState(NodeState.BUSY);
-                }
+                node.trySetState(NodeState.BUSY);
                 nodeValues.put(node, node.getDistance()+manhattanDistFromEnd(node));
                 queue.add(node);
             }
         }
-        if(!relaxNode.isStartOrEnd()){
-            relaxNode.setState(NodeState.VISITED);
-        }
+        relaxNode.trySetState(NodeState.VISITED);
     }
 }

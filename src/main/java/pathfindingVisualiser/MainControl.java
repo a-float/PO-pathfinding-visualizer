@@ -24,17 +24,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainControl implements Initializable {
-    private static final Map<NodeState, Color> colorMap;
     private Timeline timer;
-    static {
-        colorMap = Map.of(NodeState.FREE, Color.LAVENDER,
-                NodeState.START, Color.GREEN,
-                NodeState.END, Color.ORANGERED,
-                NodeState.WALL, Color.BLACK,
-                NodeState.VISITED, Color.DARKBLUE,
-                NodeState.BUSY, Color.CYAN,
-                NodeState.PATH, Color.YELLOW);
-    }
 
     @FXML
     Canvas boardCanvas;
@@ -130,7 +120,7 @@ public class MainControl implements Initializable {
         for(int x = 0; x < board.getWidth(); x++){
             for(int y = 0; y < board.getHeight(); y++){
                 Node node = board.getNodeAt(new Vector2(x,y));
-                gc.setFill(colorMap.get(node.getState()));
+                gc.setFill(node.getColor());
                 gc.fillRect(node.getPosition().getX()*cellSize, node.getPosition().getY()*cellSize, cellSize, cellSize);
             }
         }
@@ -143,7 +133,7 @@ public class MainControl implements Initializable {
     }
     @FXML
     private void startMazeGeneration(ActionEvent event){
-        manager.resetBoard();
+        manager.resetBoard(false);
         startGeneration(mazeChoiceBox);
     }
     @FXML
@@ -153,7 +143,17 @@ public class MainControl implements Initializable {
     }
     @FXML
     void resetBoard(ActionEvent event){
-        manager.resetBoard();
+        manager.resetBoard(true);
+        showBoard();
+    }
+    @FXML
+    void setWeights(ActionEvent event){
+        manager.setWeights();
+        showBoard();
+    }
+    @FXML
+    void clearWeights(ActionEvent event){
+        manager.clearWeights();
         showBoard();
     }
 }

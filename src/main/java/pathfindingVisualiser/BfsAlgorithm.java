@@ -6,6 +6,10 @@ import java.util.Queue;
 public class BfsAlgorithm extends Pathfinder{
     private final Queue<Node> queue = new LinkedList<>();
 
+    public BfsAlgorithm(){
+        super(false);
+    }
+
     public void start(Board board){
         super.start(board);
         queue.clear();
