@@ -104,4 +104,16 @@ public class VisualizationManager {
             System.out.println("Can't change the board size while performing.");
         }
     }
+
+    public boolean flipWall(Vector2 pos) {
+        board.getNodeAt(pos).flipWall();
+        return board.getNodeAt(pos).getState() == NodeState.WALL;   //if its a wall now, it has been flipped to a wall
+    }
+
+    public void flipToWall(Vector2 pos, boolean toWall){
+        if(board.isInBounds(pos)) {
+            NodeState targetState = toWall ? NodeState.WALL : NodeState.FREE;
+            board.getNodeAt(pos).trySetState(targetState);
+        }
+    }
 }

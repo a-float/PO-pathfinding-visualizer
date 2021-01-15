@@ -97,4 +97,13 @@ public class Node implements Comparable<Node>{
             return Color.WHITE.interpolate(NodeState.colorMap.get(state),interpolate);
         }
     }
+
+    public void flipWall() {
+        if(state == NodeState.WALL) {
+            state = NodeState.FREE;
+        }
+        else{
+            trySetState(NodeState.WALL);
+        }
+    }
 }

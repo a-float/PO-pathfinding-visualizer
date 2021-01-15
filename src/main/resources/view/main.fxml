@@ -34,7 +34,7 @@
          <children>
             <StackPane fx:id="canvasParentPane" prefHeight="418.0" prefWidth="700.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Canvas fx:id="boardCanvas" height="416.0" width="700.0" />
+                  <Canvas fx:id="boardCanvas" height="286.0" onMouseDragged="#canvasDragged" onMousePressed="#canvasPressed" width="561.0" />
                </children>
             </StackPane>
          </children>

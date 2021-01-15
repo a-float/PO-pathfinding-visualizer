@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.control.*;
 
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -38,11 +39,33 @@ public class MainControl implements Initializable {
     private VisualizationManager manager;
     private boolean isPlaying = false;
     private double cellSize;
+    private boolean changingToWalls = false;
 
     @FXML
     StackPane canvasParentPane;
     @FXML
     Menu boardSizesMenu;
+
+    @FXML
+    private void canvasPressed(MouseEvent event){
+        Vector2 mousePos = getMousePosition(event);
+        if(manager.getBoard().isInBounds(mousePos)) {
+            changingToWalls = manager.flipWall(getMousePosition(event));
+            showBoard(true);
+        }
+    }
+    @FXML
+    private void canvasDragged(MouseEvent event){
+        manager.flipToWall(getMousePosition(event), changingToWalls);
+        //if walls get turned into free, there might be a black halo, around the place where the wall used to be
+        showBoard(!changingToWalls);
+    }
+
+    private Vector2 getMousePosition(MouseEvent event){
+        int x = (int) Math.floor(event.getX() / cellSize);
+        int y = (int) Math.floor(event.getY() / cellSize);
+        return new Vector2(x,y);
+    }
 
     @FXML
     private void playPause(ActionEvent event){
@@ -59,7 +82,7 @@ public class MainControl implements Initializable {
                 for(int i = 0; i < manager.stepsPerFrame; i++) {
                     manager.step();
                 }
-                showBoard();
+                showBoard(false);
             }
             else{
                 playPause(new ActionEvent());
@@ -71,7 +94,7 @@ public class MainControl implements Initializable {
     private void performOneStep(ActionEvent event){
         if(manager.isPerforming){
             manager.step();
-            showBoard();
+            showBoard(false);
         }
     }
 
@@ -87,7 +110,7 @@ public class MainControl implements Initializable {
 
         createTimer(0.05);
         Platform.runLater(this::setUpCanvasSize);
-        Platform.runLater(this::showBoard);
+        Platform.runLater(() -> showBoard(false));
     }
 
     private double calcCellSize() {
@@ -111,7 +134,7 @@ public class MainControl implements Initializable {
         manager.changeBoardSize(boardSizes.get(sizeName));
         setUpCanvasSize();
         cellSize = calcCellSize();
-        showBoard();
+        showBoard(true);
     }
 
     private void setUpCanvasSize(){
@@ -147,16 +170,19 @@ public class MainControl implements Initializable {
         }
     }
 
-    public void showBoard() {
+    public void showBoard(boolean withClear) {
         GraphicsContext gc = boardCanvas.getGraphicsContext2D();
+        if(withClear) {
+            Bounds bounds = boardCanvas.getBoundsInLocal();
+            gc.clearRect(0, 0, bounds.getWidth(), bounds.getHeight());
+        }
         Board board = manager.getBoard();
-        Bounds bounds = boardCanvas.getBoundsInLocal();
-        //gc.clearRect(0, 0, bounds.getWidth(), bounds.getHeight());
         for(int x = 0; x < board.getWidth(); x++){
             for(int y = 0; y < board.getHeight(); y++){
                 Node node = board.getNodeAt(new Vector2(x,y));
                 gc.setFill(node.getColor());
-                gc.fillRect(node.getPosition().getX()*cellSize, node.getPosition().getY()*cellSize, cellSize, cellSize);
+                //the magic numbers help prevent small gaps between cells
+                gc.fillRect(node.getPosition().getX()*cellSize-0.25, node.getPosition().getY()*cellSize-0.25, cellSize+0.5, cellSize+0.5);
             }
         }
     }
@@ -174,21 +200,21 @@ public class MainControl implements Initializable {
     @FXML
     private void clearPath(ActionEvent event){
         manager.clearPath();
-        showBoard();
+        showBoard(true);
     }
     @FXML
     private void resetBoard(ActionEvent event){
         manager.resetBoard(true);
-        showBoard();
+        showBoard(true);
     }
     @FXML
     private void setWeights(ActionEvent event){
         manager.setWeights();
-        showBoard();
+        showBoard(false);
     }
     @FXML
     private void clearWeights(ActionEvent event){
         manager.clearWeights();
-        showBoard();
+        showBoard(true);
     }
 }
