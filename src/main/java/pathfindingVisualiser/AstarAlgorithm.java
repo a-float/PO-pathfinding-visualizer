@@ -21,7 +21,6 @@ public class AstarAlgorithm extends Pathfinder{
         super.start(board);
         queue.clear();
         nodeValues.clear();
-        startNode.setDistance(0);
         endNode = board.getEndNode();
         relax(startNode);
     }
@@ -30,16 +29,11 @@ public class AstarAlgorithm extends Pathfinder{
     void search() {
         Node node = queue.poll(); //returns null when the queue is empty
         if (node == null){  //the end node has not been found
-            isSearching = false;
-            System.out.print("No path exists.");
-            done = true;
+            abandonSearch();
         }
         else {
             if (node.getState() == NodeState.END) {
-                isSearching = false;
-                isShowingPath = true;
-                target = node;
-                System.out.println("The end node has been found. Showing the path!");
+               finishSearch(node);
             }
             else if(node.getState() != NodeState.VISITED){
                 relax(node);

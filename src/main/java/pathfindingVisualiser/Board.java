@@ -1,14 +1,13 @@
 package pathfindingVisualiser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 //TODO make it a singleton?
 public class Board {
     private int width;
     private int height;
-    private final Node[][] nodes;
+//    private final Node[][] nodes;
+    private final HashMap<Vector2, Node> nodes = new HashMap<>(100);
     private Vector2 startNodePos;
     private Vector2 endNodePos;
     private boolean isWeighted = false;
@@ -17,7 +16,7 @@ public class Board {
             NodeState.VISITED, NodeState.BUSY, NodeState.PATH, NodeState.END, NodeState.START);
 
     public Node getNodeAt(Vector2 pos){
-        return nodes[pos.getY()][pos.getX()];
+        return nodes.get(pos);
     }
     public Node getRandomNode(){
         return getNodeAt(Vector2.createRandom(width,height));
@@ -26,11 +25,11 @@ public class Board {
     public Board(int width, int height){
         this.width = width;
         this.height = height;
-        this.nodes = new Node[height][width];
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                nodes[y][x] = new Node(new Vector2(x,y));
-                nodes[y][x].setBoard(this);
+                Node node = new Node(new Vector2(x,y));
+                node.setBoard(this);
+                nodes.put(node.getPosition(), node);
             }
         }
         setUpStartAndEnd();
@@ -44,39 +43,21 @@ public class Board {
     }
 
     public void clearPath(){
-        for(int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Node node = nodes[y][x];
-                if (pathNodeStates.contains(node.getState())) {
-                    node.reset(false);
-                }
+        for(Node node: nodes.values()){
+            if (pathNodeStates.contains(node.getState())) {
+                node.reset(false);
             }
         }
     }
 
     public void resetBoard(boolean clearWeights) {  //not using clear Path to not make it 2*n^2
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                Node node = nodes[y][x];
-                node.reset(clearWeights);
-            }
+        for(Node node: nodes.values()) {
+            node.reset(clearWeights);
         }
-    }
-
-    @Override
-    public String toString(){
-        StringBuilder result = new StringBuilder();
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                result.append(getNodeAt(new Vector2(x,y)).toCharacter());
-            }
-            result.append("\n");
-        }
-        return result.toString();
     }
 
     public int getNodeCount() {
-        return width * height;
+        return nodes.size();
     }
     public Node getStartNode(){
         return getNodeAt(startNodePos);
@@ -111,20 +92,16 @@ public class Board {
                 pos.getY() < 0 || pos.getY() >= getHeight());
     }
     public void clearWeights(){
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                getNodeAt(new Vector2(x,y)).setWeight(1);
-            }
+        for(Node node: nodes.values()){
+            node.setWeight(1);
         }
         isWeighted = false;
     }
     public void randomizeWeights(){
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++) {
-                if (VisualizationManager.random.nextInt(100) > VisualizationManager.WEIGHT_CHANGE) {
-                    int newWeight = VisualizationManager.random.nextInt(VisualizationManager.MAX_WEIGHT);
-                    getNodeAt(new Vector2(x, y)).setWeight(newWeight);
-                }
+        for(Node node: nodes.values()){
+            if (VisualizationManager.random.nextInt(100) > VisualizationManager.WEIGHT_CHANGE) {
+                int newWeight = VisualizationManager.random.nextInt(VisualizationManager.MAX_WEIGHT);
+                node.setWeight(newWeight);
             }
         }
         isWeighted = true;

@@ -13,7 +13,6 @@ public class DijkstraAlgorithm extends Pathfinder{
     public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
         super.start(board);
         queue.clear();
-        startNode.setDistance(0);
         relax(startNode);
     }
 
@@ -21,16 +20,11 @@ public class DijkstraAlgorithm extends Pathfinder{
     void search() {
         Node node = queue.poll(); //returns null when queue empty
         if (node == null){  //the end node has not been found
-            isSearching = false;
-            System.out.print("No path exists.");
-            done = true;
+            abandonSearch();
         }
         else {
             if (node.getState() == NodeState.END) {
-                isSearching = false;
-                isShowingPath = true;
-                target = node;
-                System.out.println("The end node has been found. Showing the path!");
+                finishSearch(node);
             } else {
                 relax(node);
             }

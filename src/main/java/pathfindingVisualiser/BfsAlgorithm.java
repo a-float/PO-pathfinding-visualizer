@@ -26,6 +26,7 @@ public class BfsAlgorithm extends Pathfinder{
                     n.setState(NodeState.BUSY);
                 }
                 n.setParent(node);
+                n.setDistance(node.getDistance()+1);
                 queue.add(n);
             }
         }
@@ -43,7 +44,7 @@ public class BfsAlgorithm extends Pathfinder{
             }
         }
         else{
-            cancelSearch();
+            abandonSearch();
         }
     }
 }

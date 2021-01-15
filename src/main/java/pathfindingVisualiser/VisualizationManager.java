@@ -91,8 +91,17 @@ public class VisualizationManager {
         else isPerforming = false;
     }
 
-    public double getCellSize(Vector2 size){
-        System.out.println(size+" from getCellSize");
-        return Math.min(size.getX()/board.getWidth(), size.getY()/board.getHeight());
+    public double getMaxCellSize(Vector2 size){
+        return Math.min((double)size.getX()/(double)board.getWidth(), (double)size.getY()/(double)board.getHeight());
+    }
+
+    public void changeBoardSize(Vector2 size){
+        if(!isPerforming){
+            System.out.println("Changing board size to "+size);
+            board = new Board(size.getX(), size.getY());
+        }
+        else{
+            System.out.println("Can't change the board size while performing.");
+        }
     }
 }

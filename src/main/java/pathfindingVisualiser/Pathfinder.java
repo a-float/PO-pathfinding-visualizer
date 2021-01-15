@@ -16,6 +16,7 @@ public abstract class Pathfinder implements BoardEditor {
     public void start(Board board) {
         this.board = board;
         startNode = board.getStartNode();
+        startNode.setDistance(0);
         isSearching = true;
         isShowingPath = false;
         done = false;
@@ -39,12 +40,12 @@ public abstract class Pathfinder implements BoardEditor {
     }
 
     protected void finishSearch(Node end){
-        System.out.println("End node has been found");
         isSearching = false;
         isShowingPath = true;
         target = end;
+        System.out.println("Found a path with length of "+ target.getDistance());
     }
-    protected void cancelSearch(){
+    protected void abandonSearch(){
         System.out.println("No path exists");
         done = true;
     }

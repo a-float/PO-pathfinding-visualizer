@@ -6,7 +6,7 @@ public class BacktrackingMazeGenerator implements BoardEditor{
     private boolean done;
     private boolean isSettingTheGridUp;
     private final Stack<Node> stack = new Stack<>();
-    private final Queue<Node> wallsToBulid = new LinkedList<>();
+    private final Queue<Node> wallsToBuild = new LinkedList<>();
     private Board board;
     private Node startNode;
     private Node prevNode;
@@ -33,15 +33,14 @@ public class BacktrackingMazeGenerator implements BoardEditor{
         return result;
     }
 
-    private void setUpWallsToBulid(){
+    private void setUpWallsToBuild(){
         int firstFullColumn = (startNode.getPosition().getX()) % 2;
-        int firstFullRow = (startNode.getPosition().getY() + 1) % 2;
         for(int x = 0 ; x < board.getWidth(); x+=1){
             for(int y = 0 ; y < board.getHeight(); y+=1){
                 if((x-firstFullColumn)%2 == 0) {
                     y++;
                 }
-                wallsToBulid.add(board.getNodeAt(new Vector2(x, y)));
+                wallsToBuild.add(board.getNodeAt(new Vector2(x, y)));
             }
         }
     }
@@ -75,12 +74,22 @@ public class BacktrackingMazeGenerator implements BoardEditor{
 
     private void putWalls(int howMany){
         for(int i = 0; i < howMany; i++){
-            if(!wallsToBulid.isEmpty()){
-                wallsToBulid.poll().trySetState(NodeState.WALL);
+            if(!wallsToBuild.isEmpty()){
+                wallsToBuild.remove().trySetState(NodeState.WALL);
             }
             else{
+                makeSureEndReachable();
                 isSettingTheGridUp = false;
                 break;
+            }
+        }
+    }
+
+    private void makeSureEndReachable() {
+        Node endNode = board.getEndNode();
+        for(Vector2 vec: endNode.getPosition().getAdjacentPositions()){
+            if(board.isInBounds(vec)){
+                board.getNodeAt(vec).trySetState(NodeState.FREE);
             }
         }
     }
@@ -93,9 +102,10 @@ public class BacktrackingMazeGenerator implements BoardEditor{
         done = false;
         this.board = board;
         isSettingTheGridUp = true;
-        setUpWallsToBulid();
+        setUpWallsToBuild();
         prevNode = null;
     }
+
     @Override
     public void step() {
         if (isSettingTheGridUp) {

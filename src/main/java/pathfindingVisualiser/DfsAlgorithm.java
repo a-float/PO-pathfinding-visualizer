@@ -13,6 +13,7 @@ public class DfsAlgorithm extends Pathfinder{
     public void start(Board board) {
         stack.clear();
         super.start(board);
+        startNode.setDistance(0);
         visit(startNode);
     }
 
@@ -22,6 +23,7 @@ public class DfsAlgorithm extends Pathfinder{
             if(n.getState() != NodeState.BUSY && n.getState() != NodeState.VISITED){
                 n.setParent(node);
                 n.trySetState(NodeState.BUSY);
+                n.setDistance(node.getDistance()+1);
                 stack.push(n);
             }
         }
@@ -39,7 +41,7 @@ public class DfsAlgorithm extends Pathfinder{
             }
         }
         else{
-            cancelSearch();
+            abandonSearch();
         }
     }
 }

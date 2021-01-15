@@ -5,26 +5,31 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.paint.Color;
+
+import javafx.scene.control.*;
+
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainControl implements Initializable {
     private Timeline timer;
+    private final Map<String, Vector2> boardSizes = Map.of(     //TODO items out of order
+            "small (14x7)", new Vector2(14,8),
+            "medium (28x16)", new Vector2(28,16),
+            "big (49x28)", new Vector2(49,28),
+            "large (70x40)", new Vector2(70,40),
+            "small square (15x15)", new Vector2(15,15),
+            "bigger square (30x30)", new Vector2(30,30)
+            );
 
     @FXML
     Canvas boardCanvas;
@@ -32,6 +37,12 @@ public class MainControl implements Initializable {
     ChoiceBox<String> algChoiceBox, mazeChoiceBox;
     private VisualizationManager manager;
     private boolean isPlaying = false;
+    private double cellSize;
+
+    @FXML
+    StackPane canvasParentPane;
+    @FXML
+    Menu boardSizesMenu;
 
     @FXML
     private void playPause(ActionEvent event){
@@ -66,29 +77,57 @@ public class MainControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Board board = new Board(63,36); //canvas is 7:4
         manager = VisualizationManager.getInstance();
-        manager.setBoard(board);
+        manager.setBoard(new Board(63,36)); //board ratio is about 7:4
+        cellSize = calcCellSize();  //need to be before setUpCanvas size, as the second uses callSize
+        setUpBoardMenuItem();
 
         mazeChoiceBox.getItems().addAll(manager.getMazeNames());
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
 
         createTimer(0.05);
-        setUpCanvasSize();
+        Platform.runLater(this::setUpCanvasSize);
         Platform.runLater(this::showBoard);
     }
 
+    private double calcCellSize() {
+        Bounds bounds = boardCanvas.getBoundsInLocal();
+        return manager.getMaxCellSize(new Vector2((int)bounds.getWidth(), (int)bounds.getHeight()));
+    }
+
+    private void setUpBoardMenuItem() {
+        ToggleGroup toggleGroup = new ToggleGroup();
+        for(String str: boardSizes.keySet()){
+            RadioMenuItem newItem = new RadioMenuItem(str);
+            newItem.setOnAction(e -> {
+                changeCanvasSize(newItem.getText());
+            });
+            toggleGroup.getToggles().add(newItem);
+            boardSizesMenu.getItems().add(newItem);
+        }
+    }
+
+    private void changeCanvasSize(String sizeName){
+        manager.changeBoardSize(boardSizes.get(sizeName));
+        setUpCanvasSize();
+        cellSize = calcCellSize();
+        showBoard();
+    }
+
     private void setUpCanvasSize(){
+        //get parent size
         Vector2 parentSize = Vector2.zero();
-        parentSize.setX((int)boardCanvas.getBoundsInParent().getWidth());
-        parentSize.setY((int)boardCanvas.getBoundsInParent().getHeight());
-        double cellSize = manager.getCellSize(parentSize);
+        parentSize.setX((int)canvasParentPane.getWidth());
+        parentSize.setY((int)canvasParentPane.getHeight());
         System.out.println(parentSize);
+
+        cellSize = manager.getMaxCellSize(parentSize);
         System.out.println(cellSize);
-        System.out.println("x size "+Math.round(parentSize.getX()*cellSize));
+        //apply it to the canvas
         boardCanvas.setWidth(Math.round(manager.getBoard().getWidth()*cellSize));
         boardCanvas.setHeight(Math.round(manager.getBoard().getHeight()*cellSize));
     }
+
     private void createTimer(double seconds) {
         if (timer != null) {
             timer.stop();
@@ -102,21 +141,17 @@ public class MainControl implements Initializable {
         if(!manager.isPerforming) {
             System.out.println(generatorChoiceBox.getValue());
             if(generatorChoiceBox.getValue()!= null) {
-                manager.init(generatorChoiceBox.getValue().toString());
-//                playPause(new ActionEvent());
+                manager.init(generatorChoiceBox.getValue());
+                playPause(new ActionEvent());   //should the generation autostart
             }
         }
     }
 
-    public void showBoard() { //TODO hardcoded colors
+    public void showBoard() {
         GraphicsContext gc = boardCanvas.getGraphicsContext2D();
-        Bounds bounds = boardCanvas.getBoundsInLocal();
         Board board = manager.getBoard();
-        double cellSize = Math.min(bounds.getWidth()/board.getWidth(), bounds.getHeight()/board.getHeight());
-//        gc.setFill(Color.LAVENDER);     //TODO dont need to clear if its all covered again anyway
-//        gc.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
-//        gc.clearRect(0, 0, bounds.getWidth(), bounds.getHeight());
-
+        Bounds bounds = boardCanvas.getBoundsInLocal();
+        //gc.clearRect(0, 0, bounds.getWidth(), bounds.getHeight());
         for(int x = 0; x < board.getWidth(); x++){
             for(int y = 0; y < board.getHeight(); y++){
                 Node node = board.getNodeAt(new Vector2(x,y));
@@ -137,22 +172,22 @@ public class MainControl implements Initializable {
         startGeneration(mazeChoiceBox);
     }
     @FXML
-    void clearPath(ActionEvent event){
+    private void clearPath(ActionEvent event){
         manager.clearPath();
         showBoard();
     }
     @FXML
-    void resetBoard(ActionEvent event){
+    private void resetBoard(ActionEvent event){
         manager.resetBoard(true);
         showBoard();
     }
     @FXML
-    void setWeights(ActionEvent event){
+    private void setWeights(ActionEvent event){
         manager.setWeights();
         showBoard();
     }
     @FXML
-    void clearWeights(ActionEvent event){
+    private void clearWeights(ActionEvent event){
         manager.clearWeights();
         showBoard();
     }

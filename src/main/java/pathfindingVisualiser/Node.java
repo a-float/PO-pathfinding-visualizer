@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Node implements Comparable<Node>{
     private NodeState state;
-    private Vector2 position;
+    private final Vector2 position; //not settable
     private Board board;
     private Node parent;
     private int weight;
@@ -65,10 +65,6 @@ public class Node implements Comparable<Node>{
     }
     public Vector2 getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector2 position) {
-        this.position = position;
     }
 
     public boolean isStartOrEnd() {
