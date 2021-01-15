@@ -17,8 +17,8 @@ public class AstarAlgorithm extends Pathfinder{
     }
 
     @Override
-    public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
-        super.start(board);
+    public void start(Board board, Node startNode) {    //TODO doesnt actually need the board, maybe no pathfinder does
+        super.start(board, startNode);
         queue.clear();
         nodeValues.clear();
         endNode = board.getEndNode();
@@ -26,7 +26,7 @@ public class AstarAlgorithm extends Pathfinder{
     }
 
     @Override
-    void search() {
+    protected void search() {
         Node node = queue.poll(); //returns null when the queue is empty
         if (node == null){  //the end node has not been found
             abandonSearch();

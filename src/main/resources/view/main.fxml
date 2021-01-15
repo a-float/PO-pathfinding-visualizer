@@ -14,6 +14,11 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="UserPath">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#clearWandererPath" text="Clear user path" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <Pane prefHeight="70.0" prefWidth="700.0">

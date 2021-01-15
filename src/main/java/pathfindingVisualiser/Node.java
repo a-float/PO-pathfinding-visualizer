@@ -11,6 +11,12 @@ public class Node implements Comparable<Node>{
     private Node parent;
     private int weight;
 
+    public void setPartOfWandererPath(boolean partOfWandererPath) {
+        isPartOfWandererPath = partOfWandererPath;
+    }
+
+    private boolean isPartOfWandererPath = false;
+
     private double distance;
 
     public Node(Vector2 position){
@@ -79,7 +85,11 @@ public class Node implements Comparable<Node>{
         trySetState(NodeState.FREE);
         this.distance = Double.POSITIVE_INFINITY;
         this.parent = null;
-        if(clearWeights)this.weight = 1;
+
+        if(clearWeights) {
+            this.weight = 1;
+            this.isPartOfWandererPath = false;
+        }
     }
 
     public void trySetState(NodeState state){
@@ -89,7 +99,10 @@ public class Node implements Comparable<Node>{
     }
 
     public Color getColor(){
-        if(state != NodeState.FREE){
+        if(isPartOfWandererPath){
+            return NodeState.colorMap.get(NodeState.WANDERER_PATH);
+        }
+        else if(state != NodeState.FREE){
             return NodeState.colorMap.get(state);
         }
         else{

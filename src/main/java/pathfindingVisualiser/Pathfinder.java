@@ -13,16 +13,16 @@ public abstract class Pathfinder implements BoardEditor {
         this.canSolveWeighted = canSolveWeighted;
     }
 
-    public void start(Board board) {
+    public void start(Board board, Node startNode) {
         this.board = board;
-        startNode = board.getStartNode();
-        startNode.setDistance(0);
+        this.startNode = startNode;
+        this.startNode.setDistance(0);
         isSearching = true;
         isShowingPath = false;
         done = false;
     }
 
-    abstract void search();
+    protected abstract void search();
 
     public void step() {
         if(isSearching) {

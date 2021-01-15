@@ -13,6 +13,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.control.*;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -31,6 +33,7 @@ public class MainControl implements Initializable {
             "small square (15x15)", new Vector2(15,15),
             "bigger square (30x30)", new Vector2(30,30)
             );
+
 
     @FXML
     Canvas boardCanvas;
@@ -107,10 +110,21 @@ public class MainControl implements Initializable {
 
         mazeChoiceBox.getItems().addAll(manager.getMazeNames());
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
-
         createTimer(0.05);
+
+        Platform.runLater(
+            () -> boardCanvas.getScene().addEventHandler(KeyEvent.KEY_PRESSED,
+                    (key) -> handleKeyPress(key))
+        );
+
         Platform.runLater(this::setUpCanvasSize);
         Platform.runLater(() -> showBoard(false));
+    }
+
+    private void handleKeyPress(KeyEvent key) {
+        if(manager.handleKeyPress(key)){
+            showBoard(true);
+        }
     }
 
     private double calcCellSize() {
@@ -215,6 +229,11 @@ public class MainControl implements Initializable {
     @FXML
     private void clearWeights(ActionEvent event){
         manager.clearWeights();
+        showBoard(true);
+    }
+    @FXML
+    private void clearWandererPath(ActionEvent event){
+        manager.clearWandererPath();
         showBoard(true);
     }
 }

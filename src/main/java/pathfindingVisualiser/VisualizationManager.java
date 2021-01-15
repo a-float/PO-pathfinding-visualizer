@@ -1,12 +1,14 @@
 package pathfindingVisualiser;
 
+import javafx.scene.input.KeyEvent;
+
 import java.util.*;
 
 //its a singleton class //TODO should it be? Same with BoardEditors
 public class VisualizationManager {
     public int stepsPerFrame;
     private Board board;        //TODO move it to a separate data class?
-    private final static HashMap<String, BoardEditor> mazeGenerators= new HashMap<>();
+    private final static HashMap<String, MazeGenerator> mazeGenerators= new HashMap<>();
     private final static HashMap<String, Pathfinder> pathfinders= new HashMap<>();
     public boolean isPerforming = false;
     private BoardEditor currentEditor;
@@ -15,6 +17,7 @@ public class VisualizationManager {
     public static final int MAX_WEIGHT = 100;
     public static final int WEIGHT_CHANGE = 20;
     public static Random random = new Random();
+    private final UserWanderer wanderer = new UserWanderer();
 
     private VisualizationManager(){
         mazeGenerators.put("Random Maze", new RandomMazeGenerator());
@@ -36,6 +39,8 @@ public class VisualizationManager {
     public void setBoard(Board board){
         this.stepsPerFrame = Math.max(1, board.getNodeCount()/FPS_RATIO);
         this.board = board;
+        wanderer.reset();
+        wanderer.setBoard(board);
     }
 
     public Board getBoard() {
@@ -60,13 +65,14 @@ public class VisualizationManager {
         else{
             currentEditor = mazeGenerators.get(editorToStartName);
         }
-        currentEditor.start(board);
+        currentEditor.start(board, wanderer.getNodeToStartFrom());
         System.out.println("starting "+editorToStartName);
         isPerforming = true;
     }
 
     public void resetBoard(boolean clearWeights){
         if(!isPerforming) {
+            wanderer.reset();
             board.resetBoard(clearWeights);
         }
     }
@@ -98,7 +104,7 @@ public class VisualizationManager {
     public void changeBoardSize(Vector2 size){
         if(!isPerforming){
             System.out.println("Changing board size to "+size);
-            board = new Board(size.getX(), size.getY());
+            setBoard(new Board(size.getX(), size.getY()));
         }
         else{
             System.out.println("Can't change the board size while performing.");
@@ -115,5 +121,13 @@ public class VisualizationManager {
             NodeState targetState = toWall ? NodeState.WALL : NodeState.FREE;
             board.getNodeAt(pos).trySetState(targetState);
         }
+    }
+
+    public boolean handleKeyPress(KeyEvent key) {
+        return wanderer.handleKey(key);
+    }
+
+    public void clearWandererPath() {
+        wanderer.clearPath();
     }
 }

@@ -10,8 +10,8 @@ public class BfsAlgorithm extends Pathfinder{
         super(false);
     }
 
-    public void start(Board board){
-        super.start(board);
+    public void start(Board board, Node startNode){
+        super.start(board, startNode);
         queue.clear();
         queue.add(startNode);
     }
@@ -33,7 +33,7 @@ public class BfsAlgorithm extends Pathfinder{
     }
 
     @Override
-    void search() {
+    protected void search() {
         if(!queue.isEmpty()){
             Node nodeToVisit = queue.poll();
             if(nodeToVisit.getState() == NodeState.END){

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -13,6 +14,7 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.setTitle("Pathfinding Visualizer");
         Scene scene = new Scene(root);
+
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();

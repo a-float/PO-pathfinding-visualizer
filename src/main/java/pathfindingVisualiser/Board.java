@@ -11,9 +11,10 @@ public class Board {
     private Vector2 startNodePos;
     private Vector2 endNodePos;
     private boolean isWeighted = false;
-    private static final List<NodeState> visitableNodeStates = Arrays.asList(NodeState.FREE, NodeState.BUSY, NodeState.END);
-    private static final List<NodeState> pathNodeStates = Arrays.asList(
-            NodeState.VISITED, NodeState.BUSY, NodeState.PATH, NodeState.END, NodeState.START);
+    private static final List<NodeState> visitableNodeStates =
+                    Arrays.asList(NodeState.FREE, NodeState.BUSY, NodeState.END, NodeState.WANDERER_PATH);
+    private static final List<NodeState> pathNodeStates =
+                    Arrays.asList(NodeState.VISITED, NodeState.BUSY, NodeState.PATH, NodeState.END, NodeState.START);
 
     public Node getNodeAt(Vector2 pos){
         return nodes.get(pos);

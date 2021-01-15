@@ -10,9 +10,9 @@ public class DfsAlgorithm extends Pathfinder{
     }
 
     @Override
-    public void start(Board board) {
+    public void start(Board board, Node startNode) {
         stack.clear();
-        super.start(board);
+        super.start(board, startNode);
         startNode.setDistance(0);
         visit(startNode);
     }
@@ -30,7 +30,7 @@ public class DfsAlgorithm extends Pathfinder{
     }
 
     @Override
-    void search() {
+    protected void search() {
         if (!stack.isEmpty()){
             Node nodeToVisit = stack.pop();
             if (nodeToVisit.getState() == NodeState.END) {

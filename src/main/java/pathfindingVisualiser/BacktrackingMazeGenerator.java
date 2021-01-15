@@ -2,13 +2,10 @@ package pathfindingVisualiser;
 
 import java.util.*;
 
-public class BacktrackingMazeGenerator implements BoardEditor{
-    private boolean done;
+public class BacktrackingMazeGenerator extends MazeGenerator{
     private boolean isSettingTheGridUp;
     private final Stack<Node> stack = new Stack<>();
     private final Queue<Node> wallsToBuild = new LinkedList<>();
-    private Board board;
-    private Node startNode;
     private Node prevNode;
 
 
@@ -95,46 +92,39 @@ public class BacktrackingMazeGenerator implements BoardEditor{
     }
 
     @Override   //TODO add abstract class here as well probably
-    public void start(Board board) {
+    public void start(Board board, Node startNode) {
+        super.start(board, startNode);
         stack.clear();
-        startNode = board.getStartNode();
         stack.add(board.getStartNode());
-        done = false;
-        this.board = board;
         isSettingTheGridUp = true;
         setUpWallsToBuild();
         prevNode = null;
     }
 
     @Override
-    public void step() {
+    protected void mazeStep() {
         if (isSettingTheGridUp) {
             putWalls(10);
         }
-        else{
-            if(!stack.isEmpty()){
+        else {
+            if (!stack.isEmpty()) {
                 Node nodeToVisit = stack.pop();
                 //used to show the currently visited node and the actual backtracking
-                if(prevNode != null) {
+                if (prevNode != null) {
                     prevNode.trySetState(NodeState.VISITED);
                 }
-                if(nodeToVisit.getState() != NodeState.VISITED) {
+                if (nodeToVisit.getState() != NodeState.VISITED) {
                     visit(nodeToVisit);
                 }
                 //this coloring doesn't impact visit logic
                 nodeToVisit.trySetState(NodeState.PATH);    //choosing end for the colour
                 prevNode = nodeToVisit;
-            }
-            else{
+            } else {
                 done = true;
-                System.out.println("Maze generation complete.");
             }
         }
+    }
 
-    }
     //TODO somethings wrong with visiting order or showing order
-    @Override
-    public boolean isDone() {
-        return done;
-    }
+
 }

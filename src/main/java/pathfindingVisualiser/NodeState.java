@@ -6,7 +6,7 @@ import java.util.Map;
 
 //TODO possibly remove the isWallable thing
 public enum NodeState {
-    WALL, FREE, VISITED, BUSY, START, END, PATH;  //TODO change BUSY to something more descriptive?
+    WALL, FREE, VISITED, BUSY, START, END, PATH, WANDERER_PATH;  //TODO change BUSY to something more descriptive?
 
     //    private static NodeState[] wallable = new NodeState[] {FREE}
     public String toString(){
@@ -18,6 +18,7 @@ public enum NodeState {
             case START -> "START";
             case END -> "END";
             case PATH -> "PATH";
+            case WANDERER_PATH -> "WANDERER_PATH";
         };
     }
 
@@ -30,6 +31,7 @@ public enum NodeState {
                 NodeState.WALL, Color.BLACK,
                 NodeState.VISITED, Color.DARKBLUE,
                 NodeState.BUSY, Color.CYAN,
-                NodeState.PATH, Color.YELLOW);
+                NodeState.PATH, Color.YELLOW,
+                NodeState.WANDERER_PATH, Color.LIGHTGREEN);
     }
 }

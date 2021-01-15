@@ -2,9 +2,7 @@ package pathfindingVisualiser;
 
 import java.util.*;
 
-public class RecursiveMazeGenerator implements BoardEditor{
-    private Board board;
-    private boolean done;
+public class RecursiveMazeGenerator extends MazeGenerator{
     private final Queue<Vector2> wallsToBulid = new LinkedList<>();
 
     /**
@@ -21,7 +19,6 @@ public class RecursiveMazeGenerator implements BoardEditor{
             return !wallsToBulid.contains((pos));
         }
     }
-
     /**
      * Checks if the wall doesn't block an exisiting passage beofre or after it
      * @param wallStart position to start buliding a wall form
@@ -113,29 +110,21 @@ public class RecursiveMazeGenerator implements BoardEditor{
     }
 
     @Override
-    public void start(Board board) {
-        this.board = board;
-        done = false;
+    public void start(Board board, Node startNode) {
+        super.start(board,startNode);
         wallsToBulid.clear();
         divideArea(Vector2.zero(), new Vector2(board.getWidth()-1, board.getHeight()-1), true);
-//        System.out.println(wallsToBulid);
     }
 
     @Override
-    public void step() {
+    protected void mazeStep() {
         if(!wallsToBulid.isEmpty()){
             Vector2 pos = wallsToBulid.poll();
             Node node = board.getNodeAt(pos);
             node.setState(NodeState.WALL);
         }
         else{
-            System.out.println("Maze generation complete.");
             done = true;
         }
-    }
-
-    @Override
-    public boolean isDone() {
-        return done;
     }
 }

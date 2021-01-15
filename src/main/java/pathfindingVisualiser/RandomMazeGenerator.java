@@ -1,32 +1,26 @@
 package pathfindingVisualiser;
 
-import java.util.Random;
-
-public class RandomMazeGenerator implements BoardEditor{
-    private Board board;
-    private int wallsToPut;
+public class RandomMazeGenerator extends MazeGenerator {
+    private int wallsToPutCount;
 
     @Override
-    public void start(Board board) {    //TODO add wallFactor back?
-        this.board = board;
-        wallsToPut = (int) Math.round(board.getNodeCount() * 0.26) - 1;
-        System.out.println(wallsToPut);
+    public void start(Board board, Node startNode) {
+        super.start(board, startNode);
+        wallsToPutCount = (int) Math.round(board.getNodeCount() * 0.24) - 1;
     }
 
     @Override
-    public void step() {
-        if(wallsToPut > 0){
+    protected void mazeStep() {
+        if(wallsToPutCount > 0){
             Node node = board.getRandomNode();
             while(node.getState() != NodeState.FREE){
                 node = board.getRandomNode();
             }
             node.setState(NodeState.WALL);
-            wallsToPut--;
+            wallsToPutCount--;
         }
-    }
-
-    @Override
-    public boolean isDone() {
-        return wallsToPut == 0;
+        else{
+            done = true;
+        }
     }
 }

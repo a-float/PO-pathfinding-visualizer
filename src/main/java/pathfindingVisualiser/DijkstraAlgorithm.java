@@ -10,14 +10,14 @@ public class DijkstraAlgorithm extends Pathfinder{
     }
 
     @Override
-    public void start(Board board) {    //TODO doesnt actually need the board, maybe no pathfinder does
-        super.start(board);
+    public void start(Board board, Node startNode) {    //TODO doesnt actually need the board, maybe no pathfinder does
+        super.start(board, startNode);
         queue.clear();
         relax(startNode);
     }
 
     @Override
-    void search() {
+    protected void search() {
         Node node = queue.poll(); //returns null when queue empty
         if (node == null){  //the end node has not been found
             abandonSearch();
