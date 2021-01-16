@@ -4,10 +4,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javafx.geometry.Bounds;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -17,8 +21,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -43,11 +52,13 @@ public class MainControl implements Initializable {
     private boolean isPlaying = false;
     private double cellSize;
     private boolean changingToWalls = false;
-
     @FXML
     StackPane canvasParentPane;
     @FXML
     Menu boardSizesMenu;
+    @FXML
+    private TextArea console;
+    private PrintStream ps ;
 
     @FXML
     private void canvasPressed(MouseEvent event){
@@ -100,6 +111,10 @@ public class MainControl implements Initializable {
             showBoard(false);
         }
     }
+    @FXML
+    private void toggleLegendWindow(ActionEvent event){
+        System.out.println("bang legend");
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -111,7 +126,8 @@ public class MainControl implements Initializable {
         mazeChoiceBox.getItems().addAll(manager.getMazeNames());
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
         createTimer(0.05);
-
+        ps = new PrintStream(new Console(console)) ;
+        System.setOut(ps);
         Platform.runLater(
             () -> boardCanvas.getScene().addEventHandler(KeyEvent.KEY_PRESSED,
                     (key) -> handleKeyPress(key))
@@ -156,10 +172,8 @@ public class MainControl implements Initializable {
         Vector2 parentSize = Vector2.zero();
         parentSize.setX((int)canvasParentPane.getWidth());
         parentSize.setY((int)canvasParentPane.getHeight());
-        System.out.println(parentSize);
 
         cellSize = manager.getMaxCellSize(parentSize);
-        System.out.println(cellSize);
         //apply it to the canvas
         boardCanvas.setWidth(Math.round(manager.getBoard().getWidth()*cellSize));
         boardCanvas.setHeight(Math.round(manager.getBoard().getHeight()*cellSize));
@@ -174,14 +188,21 @@ public class MainControl implements Initializable {
         if(isPlaying)timer.play();
     }
 
-    private void startGeneration(ChoiceBox<String> generatorChoiceBox){ //TODO ChoiceBox should hold BoardEditors
-        if(!manager.isPerforming) {
-            System.out.println(generatorChoiceBox.getValue());
-            if(generatorChoiceBox.getValue()!= null) {
-                manager.init(generatorChoiceBox.getValue());
-                playPause(new ActionEvent());   //should the generation autostart
-            }
+    private void startGeneration(ChoiceBox<String> generatorChoiceBox, boolean isPathfinder){ //TODO ChoiceBox should hold BoardEditors
+        if(generatorChoiceBox.getValue()!= null) {
+            manager.init(generatorChoiceBox.getValue(), isPathfinder);
+            //playPause(new ActionEvent());   //should the generation autostart //TODO could add a checkbox for this
         }
+    }
+    @FXML
+    private void startPathfinding(ActionEvent event){
+        if(!manager.isPerforming)manager.clearPath();
+        startGeneration(algChoiceBox, true);
+    }
+    @FXML
+    private void startMazeGeneration(ActionEvent event){
+        if(!manager.isPerforming)manager.resetBoard(false);
+        startGeneration(mazeChoiceBox, false);
     }
 
     public void showBoard(boolean withClear) {
@@ -199,17 +220,6 @@ public class MainControl implements Initializable {
                 gc.fillRect(node.getPosition().getX()*cellSize-0.25, node.getPosition().getY()*cellSize-0.25, cellSize+0.5, cellSize+0.5);
             }
         }
-    }
-
-    @FXML
-    private void startPathfinding(ActionEvent event){
-        manager.clearPath();
-        startGeneration(algChoiceBox);
-    }
-    @FXML
-    private void startMazeGeneration(ActionEvent event){
-        manager.resetBoard(false);
-        startGeneration(mazeChoiceBox);
     }
     @FXML
     private void clearPath(ActionEvent event){
@@ -235,5 +245,39 @@ public class MainControl implements Initializable {
     private void clearWandererPath(ActionEvent event){
         manager.clearWandererPath();
         showBoard(true);
+    }
+
+    private class Console extends OutputStream {
+        private TextArea console;
+
+        public Console(TextArea console) {
+            this.console = console;
+        }
+
+        public void appendText(String valueOf) {
+            Platform.runLater(() -> console.appendText(valueOf));
+        }
+
+        public void write(int b) throws IOException {
+            appendText(String.valueOf((char)b));
+        }
+    }
+
+    @FXML
+    private void openLegendMenuItem(ActionEvent event) {
+        FXMLLoader legendLoader = new FXMLLoader(getClass().getResource("/view/legend.fxml"));
+        final Stage legend = new Stage();
+        legend.setTitle("Legend");
+        legend.initModality(Modality.NONE);
+        legend.initOwner(canvasParentPane.getScene().getWindow());
+        Parent legendRoot;
+        try {
+            legendRoot = legendLoader.load();
+            Scene legendScene = new Scene(legendRoot);
+            legend.setScene(legendScene);
+            legend.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

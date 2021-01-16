@@ -43,7 +43,7 @@ public abstract class Pathfinder implements BoardEditor {
         isSearching = false;
         isShowingPath = true;
         target = end;
-        System.out.println("Found a path with length of "+ target.getDistance());
+        System.out.println("Found a path with a length of "+ target.getDistance());
     }
     protected void abandonSearch(){
         System.out.println("No path exists");

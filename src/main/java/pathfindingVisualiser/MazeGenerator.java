@@ -19,7 +19,7 @@ public abstract class MazeGenerator implements BoardEditor{
         if(!done) {
             mazeStep();
         }
-        else{
+        if(done){
             System.out.println("Maze generation complete.");
         }
     }

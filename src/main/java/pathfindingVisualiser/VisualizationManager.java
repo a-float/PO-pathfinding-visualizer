@@ -53,21 +53,24 @@ public class VisualizationManager {
         return new ArrayList<>(pathfinders.keySet());
     }
 
-    public void init(String editorToStartName) {
-        if(pathfinders.containsKey(editorToStartName)){
-            Pathfinder toRun = pathfinders.get(editorToStartName);
-            if(board.getIsWeighted() && !toRun.canSolveWeighted){
-                System.out.println("Can not run this algorithm on a weighted graph.");
-                return;
+    public void init(String editorToStartName, boolean isPathfinder) {
+        if(!isPerforming) {
+            if (isPathfinder) {
+                Pathfinder toRun = pathfinders.get(editorToStartName);
+                if (board.getIsWeighted() && !toRun.canSolveWeighted) {
+                    System.out.println("Can not run this algorithm on a weighted graph.");
+                    return;
+                } else currentEditor = toRun;
+            } else {
+                currentEditor = mazeGenerators.get(editorToStartName);
             }
-            else currentEditor = toRun;
+            currentEditor.start(board, wanderer.getNodeToStartFrom());
+            System.out.println("Starting " + editorToStartName);
+            isPerforming = true;
         }
         else{
-            currentEditor = mazeGenerators.get(editorToStartName);
+            System.out.println("Can't start another generator while performing.");
         }
-        currentEditor.start(board, wanderer.getNodeToStartFrom());
-        System.out.println("starting "+editorToStartName);
-        isPerforming = true;
     }
 
     public void resetBoard(boolean clearWeights){
@@ -75,20 +78,32 @@ public class VisualizationManager {
             wanderer.reset();
             board.resetBoard(clearWeights);
         }
+        else{
+            System.out.println("Can't reset the board while performing.");
+        }
     }
     public void clearPath(){
         if(!isPerforming) {
             board.clearPath();
+        }
+        else{
+            System.out.println("Can't clear path while performing.");
         }
     }
     public void setWeights(){
         if(!isPerforming) {
             board.randomizeWeights();
         }
+        else{
+            System.out.println("Can't set weights while performing.");
+        }
     }
     public void clearWeights(){
         if(!isPerforming) {
             board.clearWeights();
+        }
+        else{
+            System.out.println("Can't clear weights while performing.");
         }
     }
 

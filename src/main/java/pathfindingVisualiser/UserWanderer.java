@@ -24,7 +24,6 @@ public class UserWanderer {
     public void setBoard(Board board){
         this.board = board;
         this.nodeHistory.push(board.getStartNode());
-        System.out.println(nodeHistory);
     }
 
     public void reset() {
@@ -62,7 +61,6 @@ public class UserWanderer {
         }
     }
     public Node getNodeToStartFrom(){
-        System.out.println(nodeHistory);
         return nodeHistory.peek();
     }
 
