@@ -19,6 +19,8 @@ public class VisualizationManager {
     private static final int FPS_RATIO = 500;
     public static final int MAX_WEIGHT = 100;
     public static final int WEIGHT_CHANGE = 20;
+
+    public static boolean allowDiagonals = true;
     public static Random random = new Random(System.currentTimeMillis());
     private final UserWanderer wanderer = new UserWanderer();
 

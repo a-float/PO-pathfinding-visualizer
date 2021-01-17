@@ -117,15 +117,16 @@ public class MainControl implements Initializable {
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
         createTimer(0.05);
         PrintStream ps = new PrintStream(new Console(console));
-        System.setOut(ps);
+        //System.setOut(ps);
         Platform.runLater(
             () -> boardCanvas.getScene().addEventHandler(KeyEvent.KEY_PRESSED,
                     this::handleKeyPress)
         );
-
+        Platform.runLater(() -> openLegendWindow(new ActionEvent()));
         Platform.runLater(this::setUpCanvasSize);
         Platform.runLater(() -> showBoard(false));
     }
+
 
     private void handleKeyPress(KeyEvent key) {
         if(manager.handleKeyPress(key)){
@@ -147,9 +148,7 @@ public class MainControl implements Initializable {
         Collections.sort(keys);
         for(String str: keys){
             RadioMenuItem newItem = new RadioMenuItem(str);
-            newItem.setOnAction(e -> {
-                changeCanvasSize(newItem.getText());
-            });
+            newItem.setOnAction(e -> changeCanvasSize(newItem.getText()));
             toggleGroup.getToggles().add(newItem);
             boardSizesMenu.getItems().add(newItem);
         }
@@ -263,7 +262,7 @@ public class MainControl implements Initializable {
     }
 
     @FXML
-    private void openLegendMenuItem(ActionEvent event) {
+    private void openLegendWindow(ActionEvent event) {
         FXMLLoader legendLoader = new FXMLLoader(getClass().getResource("/view/legend.fxml"));
         final Stage legend = new Stage();
         legend.setTitle("Legend");
@@ -290,5 +289,8 @@ public class MainControl implements Initializable {
     private void toggleAutostart(ActionEvent event){
         autostart = !autostart;
     }
-
+    @FXML
+    private void toggleDiagonals(ActionEvent event){
+        VisualizationManager.allowDiagonals = !VisualizationManager.allowDiagonals;
+    }
 }

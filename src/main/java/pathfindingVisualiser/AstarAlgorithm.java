@@ -43,12 +43,13 @@ public class AstarAlgorithm extends Pathfinder{
     }
 
     /**
-     * @param a start node
-     * @return manhattan distance between endNode and startNodes' positions
+     * @param node start node
+     * @return euclidean distance between endNode and startNodes' positions
      */
-    private int manhattanDistFromEnd(Node a){
-        Vector2 diff = Vector2.subtract(endNode.getPosition(), a.getPosition());
-        return diff.getX()*diff.getX() + diff.getY()*diff.getY();
+    private double euclideanDistFromEnd(Node node){
+        Vector2 diff = Vector2.subtract(endNode.getPosition(), node.getPosition());
+        double distSquared = diff.getX()*diff.getX() + diff.getY()*diff.getY();
+        return Math.sqrt(distSquared);
     }
 
     /**
@@ -62,7 +63,7 @@ public class AstarAlgorithm extends Pathfinder{
                 node.setParent(relaxNode);
                 node.setDistance(newDistance);
                 node.trySetState(NodeState.BUSY);
-                nodeValues.put(node, node.getDistance()+manhattanDistFromEnd(node));
+                nodeValues.put(node, node.getDistance() + euclideanDistFromEnd(node));
                 queue.add(node);
             }
         }

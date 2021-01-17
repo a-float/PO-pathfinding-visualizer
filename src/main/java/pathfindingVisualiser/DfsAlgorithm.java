@@ -24,7 +24,7 @@ public class DfsAlgorithm extends Pathfinder{
     private void visit(Node node){
         node.trySetState(NodeState.VISITED);
         for(Node n: node.getNeighbours()){
-            if(n.getState() != NodeState.BUSY && n.getState() != NodeState.VISITED){
+            if(n.getState() != NodeState.VISITED){
                 n.setParent(node);
                 n.trySetState(NodeState.BUSY);
                 n.setDistance(node.getDistance()+1);

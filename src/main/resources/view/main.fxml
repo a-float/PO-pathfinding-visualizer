@@ -16,13 +16,14 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#openLegendMenuItem" text="Show help" />
+              <MenuItem mnemonicParsing="false" onAction="#openLegendWindow" text="Show help" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Other">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#cancelCurrentGeneration" text="Cancel current visualization" />
                   <RadioMenuItem mnemonicParsing="false" onAction="#toggleAutostart" selected="true" text="Autostart visualization" />
+                  <RadioMenuItem mnemonicParsing="false" onAction="#toggleDiagonals" selected="true" text="Allow diagonals" />
                </items>
             </Menu>
         </menus>

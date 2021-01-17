@@ -70,12 +70,17 @@ public class Board {
      */
     public List<Node> getNodeNeighbours(Vector2 position) {
         List<Node> result = new ArrayList<Node>(4);
-        for (Vector2 pos : position.getAdjacentPositions()) {
-            if (pos.getX() >= 0 && pos.getX() < width
-                    && pos.getY() >= 0 && pos.getY() < height) {
-                Node neigh = getNodeAt(pos);
-                if (visitableNodeStates.contains(neigh.getState())) {
-                    result.add(neigh);
+        for(int dx = -1; dx<2; dx++){
+            for(int dy = -1; dy<2; dy++){
+                if(VisualizationManager.allowDiagonals && (dx != 0 || dy != 0)
+                || !VisualizationManager.allowDiagonals && ((dx == 0 || dy == 0) && dx+dy != 0)) {
+                    Vector2 pos = Vector2.add(position, new Vector2(dx, dy));
+                    if(isInBounds(pos)) {
+                        Node neigh = getNodeAt(pos);
+                        if (visitableNodeStates.contains(neigh.getState())) {
+                            result.add(neigh);
+                        }
+                    }
                 }
             }
         }
