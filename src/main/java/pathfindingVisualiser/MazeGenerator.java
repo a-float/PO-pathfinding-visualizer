@@ -5,7 +5,7 @@ public abstract class MazeGenerator implements BoardEditor{
     protected Board board;
     protected Node startNode;
 
-    @Override   //TODO add abstract class here as well probably
+    @Override
     public void start(Board board, Node startNode) {
         this.startNode = startNode;
         done = false;

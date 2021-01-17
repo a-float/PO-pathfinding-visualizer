@@ -2,12 +2,15 @@ package pathfindingVisualiser;
 
 import javafx.scene.input.KeyEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
-//its a singleton class //TODO should it be? Same with BoardEditors
+//its a singleton class
 public class VisualizationManager {
     public int stepsPerFrame;
-    private Board board;        //TODO move it to a separate data class?
+    private Board board;
     private final static HashMap<String, MazeGenerator> mazeGenerators= new HashMap<>();
     private final static HashMap<String, Pathfinder> pathfinders= new HashMap<>();
     public boolean isPerforming = false;
@@ -16,7 +19,7 @@ public class VisualizationManager {
     private static final int FPS_RATIO = 500;
     public static final int MAX_WEIGHT = 100;
     public static final int WEIGHT_CHANGE = 20;
-    public static Random random = new Random();
+    public static Random random = new Random(System.currentTimeMillis());
     private final UserWanderer wanderer = new UserWanderer();
 
     private VisualizationManager(){
@@ -144,5 +147,11 @@ public class VisualizationManager {
 
     public void clearWandererPath() {
         wanderer.clearPath();
+    }
+
+    public void cancelCurrent() {
+        System.out.println("Cancelling current visualization.");
+        currentEditor = null;
+        isPerforming = false;
     }
 }

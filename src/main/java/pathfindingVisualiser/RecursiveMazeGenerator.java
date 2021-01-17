@@ -37,7 +37,7 @@ public class RecursiveMazeGenerator extends MazeGenerator{
         return !isPassage(posBeforeWall) && !isPassage(posAfterWall);
     }
 
-    /**     //TODO the random should be seeded
+    /**
      * Adds positions of soon to be walls to wallToBulid queue
      * @param wallStart position to start buliding a wall form
      * @param diff  buliding direction
@@ -83,7 +83,7 @@ public class RecursiveMazeGenerator extends MazeGenerator{
 
                 Vector2 newTopLeft1, newBottomRight1, newTopLeft2, newBottomRight2;
 
-                if(isVertical) {        //TODO comrpess lines below
+                if(isVertical) {
                     newBottomRight1 = Vector2.add(topLeft, new Vector2(wallPosIndex - 1, height - 1));
                     newTopLeft2 = Vector2.add(topLeft, new Vector2(wallPosIndex + 1, 0));
                 }

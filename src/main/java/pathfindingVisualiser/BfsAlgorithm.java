@@ -16,15 +16,15 @@ public class BfsAlgorithm extends Pathfinder{
         queue.add(startNode);
     }
 
+    /**
+     * Adds all neighbours neighbours to the queue. Sets its state to visited.
+     * @param node node to visit
+     */
     private void visit(Node node){
-        if(!node.isStartOrEnd()){   //TODO triple isStartOrEnd just like in the DFS
-            node.setState(NodeState.VISITED);
-        }
+        node.trySetState(NodeState.VISITED);
         for(Node n: node.getNeighbours()){
             if(n.getState() != NodeState.VISITED && n.getState() != NodeState.BUSY){
-                if(!n.isStartOrEnd()) {
-                    n.setState(NodeState.BUSY);
-                }
+                n.trySetState(NodeState.BUSY);
                 n.setParent(node);
                 n.setDistance(node.getDistance()+1);
                 queue.add(n);

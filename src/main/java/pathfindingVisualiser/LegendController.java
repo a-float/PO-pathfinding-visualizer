@@ -10,6 +10,9 @@ import javafx.scene.shape.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Sets up the legend and instruction window.
+ */
 public class LegendController implements Initializable{
     @FXML
     GridPane legendGridPane;

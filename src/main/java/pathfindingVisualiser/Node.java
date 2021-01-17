@@ -77,10 +77,7 @@ public class Node implements Comparable<Node>{
         return this.state == NodeState.END || this.state == NodeState.START;
     }
 
-    /**
-     * If the node is a start or an end, its state does not change
-     * Sets the node values do defaults values.
-     */
+
     public void reset(boolean clearWeights) {
         trySetState(NodeState.FREE);
         this.distance = Double.POSITIVE_INFINITY;
@@ -91,7 +88,10 @@ public class Node implements Comparable<Node>{
             this.isPartOfWandererPath = false;
         }
     }
-
+    /**
+     * If the node is a start or an end, its state does not change
+     * Sets the node values do defaults values.
+     */
     public void trySetState(NodeState state){
         if(!isStartOrEnd()){
             this.state = state;

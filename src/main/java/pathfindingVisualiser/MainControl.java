@@ -4,20 +4,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
 import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-
 import javafx.scene.control.*;
-
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -29,12 +24,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainControl implements Initializable {
     private Timeline timer;
-    private final Map<String, Vector2> boardSizes = Map.of(     //TODO items out of order
+    private final Map<String, Vector2> boardSizes = Map.of(
             "small (14x7)", new Vector2(14,8),
             "medium (28x16)", new Vector2(28,16),
             "big (49x28)", new Vector2(49,28),
@@ -52,13 +46,13 @@ public class MainControl implements Initializable {
     private boolean isPlaying = false;
     private double cellSize;
     private boolean changingToWalls = false;
+    private boolean autostart = true;
     @FXML
     StackPane canvasParentPane;
     @FXML
     Menu boardSizesMenu;
     @FXML
     private TextArea console;
-    private PrintStream ps ;
 
     @FXML
     private void canvasPressed(MouseEvent event){
@@ -111,10 +105,6 @@ public class MainControl implements Initializable {
             showBoard(false);
         }
     }
-    @FXML
-    private void toggleLegendWindow(ActionEvent event){
-        System.out.println("bang legend");
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -126,11 +116,11 @@ public class MainControl implements Initializable {
         mazeChoiceBox.getItems().addAll(manager.getMazeNames());
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
         createTimer(0.05);
-        ps = new PrintStream(new Console(console)) ;
+        PrintStream ps = new PrintStream(new Console(console));
         System.setOut(ps);
         Platform.runLater(
             () -> boardCanvas.getScene().addEventHandler(KeyEvent.KEY_PRESSED,
-                    (key) -> handleKeyPress(key))
+                    this::handleKeyPress)
         );
 
         Platform.runLater(this::setUpCanvasSize);
@@ -148,9 +138,14 @@ public class MainControl implements Initializable {
         return manager.getMaxCellSize(new Vector2((int)bounds.getWidth(), (int)bounds.getHeight()));
     }
 
+    /**
+     * Fills the menu item with possible board sizes.
+     */
     private void setUpBoardMenuItem() {
         ToggleGroup toggleGroup = new ToggleGroup();
-        for(String str: boardSizes.keySet()){
+        List<String> keys = new ArrayList<>(boardSizes.keySet());
+        Collections.sort(keys);
+        for(String str: keys){
             RadioMenuItem newItem = new RadioMenuItem(str);
             newItem.setOnAction(e -> {
                 changeCanvasSize(newItem.getText());
@@ -160,6 +155,10 @@ public class MainControl implements Initializable {
         }
     }
 
+    /**
+     * Called when a new board size is chosen.
+     * @param sizeName name of the new size. (also a key in the boardSizes map)
+     */
     private void changeCanvasSize(String sizeName){
         manager.changeBoardSize(boardSizes.get(sizeName));
         setUpCanvasSize();
@@ -188,10 +187,10 @@ public class MainControl implements Initializable {
         if(isPlaying)timer.play();
     }
 
-    private void startGeneration(ChoiceBox<String> generatorChoiceBox, boolean isPathfinder){ //TODO ChoiceBox should hold BoardEditors
+    private void startGeneration(ChoiceBox<String> generatorChoiceBox, boolean isPathfinder){
         if(generatorChoiceBox.getValue()!= null) {
             manager.init(generatorChoiceBox.getValue(), isPathfinder);
-            //playPause(new ActionEvent());   //should the generation autostart //TODO could add a checkbox for this
+            if(autostart)playPause(new ActionEvent());
         }
     }
     @FXML
@@ -247,8 +246,8 @@ public class MainControl implements Initializable {
         showBoard(true);
     }
 
-    private class Console extends OutputStream {
-        private TextArea console;
+    private static class Console extends OutputStream {
+        private final TextArea console;
 
         public Console(TextArea console) {
             this.console = console;
@@ -280,4 +279,16 @@ public class MainControl implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void cancelCurrentGeneration(ActionEvent event){
+        isPlaying = false;
+        manager.cancelCurrent();
+        clearPath(new ActionEvent());
+    }
+    @FXML
+    private void toggleAutostart(ActionEvent event){
+        autostart = !autostart;
+    }
+
 }

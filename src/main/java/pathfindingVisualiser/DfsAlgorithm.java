@@ -17,6 +17,10 @@ public class DfsAlgorithm extends Pathfinder{
         visit(startNode);
     }
 
+    /**
+     * Add the first nodes neighbour to the stack. Sets it as visited.
+     * @param node node to visit
+     */
     private void visit(Node node){
         node.trySetState(NodeState.VISITED);
         for(Node n: node.getNeighbours()){

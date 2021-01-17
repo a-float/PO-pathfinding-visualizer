@@ -2,11 +2,9 @@ package pathfindingVisualiser;
 
 import java.util.*;
 
-//TODO make it a singleton?
 public class Board {
-    private int width;
-    private int height;
-//    private final Node[][] nodes;
+    private final int width;
+    private final int height;
     private final HashMap<Vector2, Node> nodes = new HashMap<>(100);
     private Vector2 startNodePos;
     private Vector2 endNodePos;
@@ -34,9 +32,8 @@ public class Board {
             }
         }
         setUpStartAndEnd();
-        //TODO add a method setStartNode, setEndNode
     }
-    private void setUpStartAndEnd(){    //TODO choose positions
+    private void setUpStartAndEnd(){    //TODO choosing positions
         startNodePos = new Vector2(0, 0);
         endNodePos = new Vector2(width-1, height-1);
         getStartNode().setState(NodeState.START);
@@ -67,6 +64,10 @@ public class Board {
         return getNodeAt(endNodePos);
     }
 
+    /**
+     * @param position position of the node whose neighbours we want
+     * @return list of nodes with positions adjacent to the given position
+     */
     public List<Node> getNodeNeighbours(Vector2 position) {
         List<Node> result = new ArrayList<Node>(4);
         for (Vector2 pos : position.getAdjacentPositions()) {
@@ -88,6 +89,10 @@ public class Board {
         return height;
     }
 
+    /**
+     * @param pos position to check.
+     * @return true if the given position is in boards bounds else otherwise
+     */
     public boolean isInBounds(Vector2 pos){
         return !(pos.getX() < 0 || pos.getX() >= getWidth() ||
                 pos.getY() < 0 || pos.getY() >= getHeight());
@@ -98,6 +103,10 @@ public class Board {
         }
         isWeighted = false;
     }
+
+    /**
+     * Sets weight of each node with a chance of WEIGHT_CHANGE% to a value from 0 to MAX_WEIGHT
+     */
     public void randomizeWeights(){
         for(Node node: nodes.values()){
             if (VisualizationManager.random.nextInt(100) > VisualizationManager.WEIGHT_CHANGE) {

@@ -10,7 +10,7 @@ public class DijkstraAlgorithm extends Pathfinder{
     }
 
     @Override
-    public void start(Board board, Node startNode) {    //TODO doesnt actually need the board, maybe no pathfinder does
+    public void start(Board board, Node startNode) {
         super.start(board, startNode);
         queue.clear();
         relax(startNode);
@@ -31,6 +31,11 @@ public class DijkstraAlgorithm extends Pathfinder{
         }
     }
 
+    /**
+     * If the path to relaxNode neighbours is shorter then the previously found one. Updates it,
+     * then sets relaxNode's state to visited.
+     * @param relaxNode node to relax
+     */
     private void relax(Node relaxNode){
         for(Node node: relaxNode.getNeighbours()){
             double newDistance = relaxNode.getDistance() + node.getWeight();

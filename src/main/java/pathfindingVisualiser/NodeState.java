@@ -4,11 +4,9 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-//TODO possibly remove the isWallable thing
 public enum NodeState {
-    WALL, FREE, VISITED, BUSY, START, END, PATH, WANDERER_PATH;  //TODO change BUSY to something more descriptive?
+    WALL, FREE, VISITED, BUSY, START, END, PATH, WANDERER_PATH;
 
-    //    private static NodeState[] wallable = new NodeState[] {FREE}
     public String toString(){
         return switch(this){
             case WALL -> "WALL";

@@ -1,5 +1,8 @@
 package pathfindingVisualiser;
 
+/**
+ * Extended by every pathfinder.
+ */
 public abstract class Pathfinder implements BoardEditor {
     protected boolean isSearching;
     protected boolean isShowingPath;

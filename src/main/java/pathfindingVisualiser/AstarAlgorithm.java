@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class AstarAlgorithm extends Pathfinder{
+    //stores h(n)+g(n) for every busy node. h is the heuristic and g distance from the start.
     private final HashMap<Node, Double> nodeValues = new HashMap<>();
     private Node endNode;
     Comparator<Node> nodeComparator = Comparator
@@ -17,7 +18,7 @@ public class AstarAlgorithm extends Pathfinder{
     }
 
     @Override
-    public void start(Board board, Node startNode) {    //TODO doesnt actually need the board, maybe no pathfinder does
+    public void start(Board board, Node startNode) {
         super.start(board, startNode);
         queue.clear();
         nodeValues.clear();
@@ -50,6 +51,10 @@ public class AstarAlgorithm extends Pathfinder{
         return diff.getX()*diff.getX() + diff.getY()*diff.getY();
     }
 
+    /**
+     * Updates distances to all of relaxNode neighbours. Possibly adds them to the queue again.
+     * @param relaxNode the node to be relaxed. Relaxed nodes become visited.
+     */
     private void relax(Node relaxNode){
         for(Node node: relaxNode.getNeighbours()){
             double newDistance = relaxNode.getDistance() + node.getWeight();
