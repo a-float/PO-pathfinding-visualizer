@@ -2,7 +2,6 @@ package pathfindingVisualiser;
 
 import javafx.scene.input.KeyEvent;
 
-import javax.naming.ldap.StartTlsRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -11,7 +10,6 @@ public class UserWanderer {
     private final Stack<Node> nodeHistory = new Stack<>();
     private final Stack<Direction> moveHistory = new Stack<>();
     private final HashMap<Node, Integer> nodeVisitations = new HashMap<>();
-    private Vector2 currentPosition;
     private Board board;
 
     private final Map<String, Direction> keyboardControls = Map.of(
