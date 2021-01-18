@@ -29,12 +29,12 @@ import java.util.*;
 public class MainControl implements Initializable {
     private Timeline timer;
     private final Map<String, Vector2> boardSizes = Map.of(
-            "small (14x7)", new Vector2(14,8),
-            "medium (28x16)", new Vector2(28,16),
-            "big (49x28)", new Vector2(49,28),
-            "large (70x40)", new Vector2(70,40),
-            "small square (15x15)", new Vector2(15,15),
-            "bigger square (30x30)", new Vector2(30,30)
+            "(14x7) small", new Vector2(14,8),
+            "(28x16) medium", new Vector2(28,16),
+            "(49x28) big", new Vector2(49,28),
+            "(70x40) large", new Vector2(70,40),
+            "(15x15) small square", new Vector2(15,15),
+            "(30x30) bigger square", new Vector2(30,30)
             );
 
 
@@ -117,7 +117,7 @@ public class MainControl implements Initializable {
         algChoiceBox.getItems().addAll(manager.getAlgsNames());
         createTimer(0.05);
         PrintStream ps = new PrintStream(new Console(console));
-        //System.setOut(ps);
+        System.setOut(ps);
         Platform.runLater(
             () -> boardCanvas.getScene().addEventHandler(KeyEvent.KEY_PRESSED,
                     this::handleKeyPress)

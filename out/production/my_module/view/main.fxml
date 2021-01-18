@@ -3,6 +3,7 @@
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pathfindingVisualiser.MainControl">
    <children>
@@ -16,13 +17,14 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#openLegendMenuItem" text="Show help" />
+              <MenuItem mnemonicParsing="false" onAction="#openLegendWindow" text="Show help" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Other">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#cancelCurrentGeneration" text="Cancel current visualization" />
                   <RadioMenuItem mnemonicParsing="false" onAction="#toggleAutostart" selected="true" text="Autostart visualization" />
+                  <RadioMenuItem mnemonicParsing="false" onAction="#toggleDiagonals" selected="true" text="Allow diagonals" />
                </items>
             </Menu>
         </menus>
@@ -39,7 +41,10 @@
             <Button layoutX="630.0" layoutY="37.0" mnemonicParsing="false" onAction="#performOneStep" prefHeight="25.0" prefWidth="56.0" text="step" />
             <Button layoutX="218.0" layoutY="9.0" mnemonicParsing="false" onAction="#setWeights" prefHeight="25.0" prefWidth="93.0" text="Set weights" />
             <Button layoutX="218.0" layoutY="36.0" mnemonicParsing="false" onAction="#clearWeights" prefHeight="25.0" prefWidth="93.0" text="Clear weights" />
-            <TextArea fx:id="console" layoutX="317.0" layoutY="11.0" prefHeight="50.0" prefWidth="187.0" wrapText="true" />
+            <TextArea fx:id="console" editable="false" layoutX="317.0" layoutY="11.0" prefHeight="50.0" prefWidth="187.0" wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font></TextArea>
          </children>
       </Pane>
       <AnchorPane prefHeight="417.0" prefWidth="704.0">

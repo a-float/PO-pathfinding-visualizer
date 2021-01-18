@@ -140,9 +140,8 @@ public class BacktrackingMazeGenerator extends MazeGenerator{
                 }
                 if (nodeToVisit.getState() != NodeState.VISITED) {
                     visit(nodeToVisit);
+                    nodeToVisit.trySetState(NodeState.PATH);    //choosing end for the colour
                 }
-                //this coloring doesn't impact visit logic
-                nodeToVisit.trySetState(NodeState.PATH);    //choosing end for the colour
                 prevNode = nodeToVisit;
             } else {
                 done = true;
