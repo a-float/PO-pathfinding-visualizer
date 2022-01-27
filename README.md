@@ -24,5 +24,5 @@ Główna metoda main znajduje się w klasie Main.
 ### Dodatkowo
 1) Własną ścieżkę tworzyć można przy pomocy klawiszy WASD
 2) Im mocniejszy jest róż pola, tym większy jest koszt przejścia przez nie
-- [x] 11.01 - pierwsza część
-- [x] 18.01 - koniec
+3) Przycisk '>||' pozwala zatrzymać wizualizację
+4) Przycisk 'step' pozwala na przeprowadzenie wizualizacji krok po kroku
