@@ -20,17 +20,18 @@ public enum NodeState {
         };
     }
 
-    public static final Map<NodeState, Color> legendColorMap;
+    // maps node state to its color
+    public static final Map<NodeState, Color> colorMap;
     static {
-        legendColorMap = Map.of(
+        colorMap = Map.of(
                 NodeState.FREE, Color.HOTPINK,
-                NodeState.START, Color.GREEN,
+                NodeState.START, Color.LAWNGREEN,
                 NodeState.END, Color.ORANGERED,
-                NodeState.WALL, Color.BLACK,
-                NodeState.VISITED, Color.DARKBLUE,
-                NodeState.BUSY, Color.CYAN,
+                NodeState.WALL, Color.web("0x111111",1.0),
+                NodeState.VISITED, Color.ROYALBLUE,
+                NodeState.BUSY, Color.SKYBLUE,
                 NodeState.PATH, Color.YELLOW,
-                NodeState.WANDERER_PATH, Color.LIGHTGREEN);
+                NodeState.WANDERER_PATH, Color.web("0x90EE90", .7));
     }
     public static final Map<NodeState, String> legendStateDescriptionMap;
     static {

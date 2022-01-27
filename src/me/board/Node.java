@@ -102,14 +102,14 @@ public class Node implements Comparable<Node>{
 
     public Color getColor(){
         if(isPartOfWandererPath){
-            return NodeState.legendColorMap.get(NodeState.WANDERER_PATH);
+            return NodeState.colorMap.get(NodeState.WANDERER_PATH);
         }
         else if(state != NodeState.FREE){
-            return NodeState.legendColorMap.get(state);
+            return NodeState.colorMap.get(state);
         }
         else{
             double interpolate = (double)weight/ VisualizationManager.MAX_WEIGHT;
-            return Color.WHITE.interpolate(NodeState.legendColorMap.get(state),interpolate);
+            return Color.WHITE.interpolate(NodeState.colorMap.get(state),interpolate);
         }
     }
 

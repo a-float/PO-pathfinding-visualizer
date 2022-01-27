@@ -5,56 +5,56 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0"
-      prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="me.MainControl">
-    <MenuBar prefWidth="700.0">
-        <Menu fx:id="boardSizesMenu" mnemonicParsing="false" text="Change Board Size"/>
-        <Menu mnemonicParsing="false" text="User Path">
-            <MenuItem mnemonicParsing="false" onAction="#clearWandererPath" text="Clear user path"/>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-            <MenuItem mnemonicParsing="false" onAction="#openLegendWindow" text="Show help"/>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Other">
-            <MenuItem mnemonicParsing="false" onAction="#cancelCurrentGeneration"
-                      text="Cancel current visualization"/>
-            <RadioMenuItem mnemonicParsing="false" onAction="#toggleAutostart" selected="true"
-                           text="Autostart visualization"/>
-            <RadioMenuItem mnemonicParsing="false" onAction="#toggleDiagonals" selected="true"
-                           text="Allow diagonals"/>
-        </Menu>
-    </MenuBar>
-    <Pane prefHeight="70.0" prefWidth="700.0">
-        <ChoiceBox fx:id="algChoiceBox" layoutX="511.0" layoutY="10.0" prefHeight="25.0" prefWidth="111.0"/>
-        <ChoiceBox fx:id="mazeChoiceBox" layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="111.0"/>
-        <Button layoutX="630.0" layoutY="10.0" mnemonicParsing="false" onAction="#playPause" prefHeight="25.0"
-                prefWidth="56.0" text="&gt;||"/>
-        <Button layoutX="14.0" layoutY="37.0" mnemonicParsing="false" onAction="#startMazeGeneration"
-                prefHeight="25.0" prefWidth="111.0" text="Generate maze"/>
-        <Button layoutX="132.0" layoutY="9.0" mnemonicParsing="false" onAction="#resetBoard" text="Clear board"/>
-        <Button layoutX="132.0" layoutY="37.0" mnemonicParsing="false" onAction="#clearPath" prefHeight="25.0"
-                prefWidth="78.0" text="Clear path"/>
-        <Button layoutX="511.0" layoutY="38.0" mnemonicParsing="false" onAction="#startPathfinding" prefHeight="25.0"
-                prefWidth="111.0" text="Start pathfinder"/>
-        <Button layoutX="630.0" layoutY="37.0" mnemonicParsing="false" onAction="#performOneStep" prefHeight="25.0"
-                prefWidth="56.0" text="step"/>
-        <Button layoutX="218.0" layoutY="9.0" mnemonicParsing="false" onAction="#setWeights" prefHeight="25.0"
-                prefWidth="93.0" text="Set weights"/>
-        <Button layoutX="218.0" layoutY="36.0" mnemonicParsing="false" onAction="#clearWeights" prefHeight="25.0"
-                prefWidth="93.0" text="Clear weights"/>
-        <TextArea fx:id="console" editable="false" layoutX="317.0" layoutY="11.0" prefHeight="50.0" prefWidth="187.0"
-                  wrapText="true">
-            <font>
-                <Font size="11.0"/>
-            </font>
-        </TextArea>
-    </Pane>
-    <AnchorPane prefHeight="417.0" prefWidth="704.0">
-        <StackPane fx:id="canvasParentPane" prefHeight="418.0" prefWidth="700.0" AnchorPane.bottomAnchor="3.0"
-                   AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
-            <Canvas fx:id="boardCanvas" height="286.0" onMouseDragged="#canvasDragged"
-                    onMousePressed="#canvasPressed" width="561.0"/>
-        </StackPane>
-    </AnchorPane>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.MainControl">
+    <children>
+        <MenuBar prefWidth="700.0">
+            <menus>
+                <Menu fx:id="boardSizesMenu" mnemonicParsing="false" text="Change Board Size" />
+                <Menu mnemonicParsing="false" text="User Path">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#clearWandererPath" text="Clear user path" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openLegendWindow" text="Show help" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Other">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#cancelCurrentGeneration" text="Cancel current visualization" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleAutostart" selected="true" text="Autostart visualization" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleDiagonals" selected="true" text="Allow diagonals" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Pane prefHeight="70.0" prefWidth="700.0">
+            <children>
+                <ChoiceBox fx:id="algChoiceBox" layoutX="511.0" layoutY="10.0" prefHeight="25.0" prefWidth="111.0" />
+                <ChoiceBox fx:id="mazeChoiceBox" layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="111.0" />
+                <Button layoutX="630.0" layoutY="10.0" mnemonicParsing="false" onAction="#playPause" prefHeight="25.0" prefWidth="56.0" text="&gt;||" />
+                <Button layoutX="14.0" layoutY="37.0" mnemonicParsing="false" onAction="#startMazeGeneration" prefHeight="25.0" prefWidth="111.0" text="Generate maze" />
+                <Button layoutX="132.0" layoutY="9.0" mnemonicParsing="false" onAction="#resetBoard" text="Clear board" />
+                <Button layoutX="132.0" layoutY="37.0" mnemonicParsing="false" onAction="#clearPath" prefHeight="25.0" prefWidth="78.0" text="Clear path" />
+                <Button layoutX="511.0" layoutY="38.0" mnemonicParsing="false" onAction="#startPathfinding" prefHeight="25.0" prefWidth="111.0" text="Start pathfinder" />
+                <Button layoutX="630.0" layoutY="37.0" mnemonicParsing="false" onAction="#performOneStep" prefHeight="25.0" prefWidth="56.0" text="step" />
+                <Button layoutX="218.0" layoutY="9.0" mnemonicParsing="false" onAction="#setWeights" prefHeight="25.0" prefWidth="93.0" text="Set weights" />
+                <Button layoutX="218.0" layoutY="36.0" mnemonicParsing="false" onAction="#clearWeights" prefHeight="25.0" prefWidth="93.0" text="Clear weights" />
+                <TextArea fx:id="console" editable="false" layoutX="317.0" layoutY="11.0" prefHeight="50.0" prefWidth="187.0" wrapText="true">
+                    <font>
+                        <Font size="11.0" />
+                    </font></TextArea>
+            </children>
+        </Pane>
+        <AnchorPane prefHeight="417.0" prefWidth="704.0">
+            <children>
+                <StackPane fx:id="canvasParentPane" prefHeight="418.0" prefWidth="700.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Canvas fx:id="boardCanvas" height="286.0" onMouseDragged="#canvasDragged" onMousePressed="#canvasPressed" width="561.0" />
+                    </children>
+                </StackPane>
+            </children>
+        </AnchorPane>
+    </children>
 </VBox>

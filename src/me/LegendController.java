@@ -23,7 +23,7 @@ public class LegendController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         int i = 0;
         for (NodeState state : NodeState.values()) {
-            Rectangle rect = new Rectangle(17, 17, NodeState.legendColorMap.get(state));
+            Rectangle rect = new Rectangle(17, 17, NodeState.colorMap.get(state));
             Label label = new Label();
             label.setMaxWidth(250);
             label.setText(NodeState.legendStateDescriptionMap.get(state));
